@@ -8,8 +8,9 @@ public class main {
 		
 		String input = lexer.readText("example.txt");
 		
-		System.out.println(input);
-
+		
+		
+		
 	}
 
 }
