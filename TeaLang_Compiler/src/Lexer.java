@@ -4,6 +4,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class Lexer {
+	
+	
 
 	int delta = -10;
 	public int[][] transition_table = {
@@ -83,17 +85,28 @@ public class Lexer {
 		else if ((encountered_char == '=')) {
 			
 		}
+		//underscore for naming variables 
 		else if ((encountered_char == '_')) {
 			
-		}
+		}	
+		//division or comment slash
 		else if (encountered_char == '/') {
 			
 		}
+		// escpe cahracters slash
 		else if (encountered_char == '\\'){
 		
 		}
+		//iverted commas tal istrings
 		else if (encountered_char == '"') {
-			System.out.println("INVERTED COMMAS MOMENT");
+			
+		}
+		//one spacers
+		else if (encountered_char == ';' || encountered_char == ':' || encountered_char == '(' || encountered_char == ')' || encountered_char == '{' || encountered_char == '}'  ) {
+			
+		}
+		else if(encountered_char == '\n') {
+			
 		}
 		return 0;
 
