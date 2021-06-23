@@ -4,7 +4,10 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class Lexer {
-
+	
+	
+	public static ArrayList<Token> lexedTokens = new ArrayList<>();
+	
 	public static int[][] transition_table = {
 			{ 1, 1, 3, 3, -1, -1, -1, -1, -1, -1, 10, -1, 12, 13, -1, 13, -1, 17, 17, 17, -1, -1, -1 }, // digits
 			{ 2, 3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 12, 13, -1, 13, -1, 17, 17, 17, -1, -1, -1 }, // . as in 5.6, can be  .99999
@@ -154,8 +157,8 @@ public class Lexer {
 
 						if (is_final) {
 
-							System.out.println(lexeme);
-							
+							//System.out.println(lexeme);
+							lexedTokens.add(new Token(lexeme,line_number,state));
 							lexeme = "";
 							state = 0;
 							i--;
@@ -176,7 +179,13 @@ public class Lexer {
 			System.out.println("An error occurred.\nThe file " + filename + " was not found");
 			// opens and reads the specified file
 		}
+		
+		
+		for (Token token : lexedTokens) {
 
+			System.out.println(token.type);
+
+		}
 		return entire;
 	}
 

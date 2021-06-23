@@ -67,7 +67,8 @@ public class Token {
 				return "Or_Keyword";
 			case "not":
 				return "Not_Keyword";
-				
+			default:
+				return "Variable_Identifier";
 			
 			
 			}
