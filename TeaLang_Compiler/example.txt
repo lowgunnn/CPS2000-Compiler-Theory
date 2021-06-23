@@ -4,9 +4,7 @@ Hello this is a TeaLang program
 negro
 ex
 234
-/*nice nice nice
+/*nice nice nice*/
 .4gg
 
 if(x==5);
-
-/*ans

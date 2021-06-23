@@ -21,11 +21,11 @@ public class Lexer {
 			{ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 14, 13, -1, 13, -1, -1, -1, -1, -1, -1, -1 },
 			{ 10, -1, -1, -1, -1, -1, -1, -1, -1, -1, 10, -1, 12, 13, -1, 13, -1, 17, 17, 17, -1, -1, -1 },
 			{ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 12, 13, -1, 13, -1, 17, 17, 17, -1, -1, -1 },
-
+			{ 22, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 }
 
 	};
 
-	public static int[] final_states = { 1, 3, 4, 5, 7, 8, 9, 10, 11, 14, 16, 20, 21 };
+	public static int[] final_states = { 1, 3, 4, 5, 7, 8, 9, 10, 11, 14, 16, 20, 21,22};
 
 	public static int new_state_transition(int current_state, char encountered_char) {
 
@@ -95,6 +95,9 @@ public class Lexer {
 
 			return transition_table[14][current_state];
 		}
+		else if(encountered_char == '\u001a') {
+			return transition_table[15][current_state];
+		}
 		// otherwise an unexpected character not in grammer, send 0 state
 		else {
 			return -1;
@@ -120,6 +123,10 @@ public class Lexer {
 				data = sc.nextLine();
 				entire = data + "\n";
 				
+				if(!sc.hasNextLine()) {
+					entire +='\u001a';
+				}
+				
 				for (int i = 0; i < entire.length(); i++) {
 					char encountered_char = entire.charAt(i);
 
@@ -134,7 +141,7 @@ public class Lexer {
 					new_state = new_state_transition(state, encountered_char);
 					
 					if (new_state == -1) {
-						System.out.println("New Token:");
+						
 						// bad character, transitions to state delta
 
 						// check if current state is a final state, if it is then correct Token
