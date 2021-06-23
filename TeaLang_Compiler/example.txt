@@ -4,7 +4,13 @@ Hello this is a TeaLang program
 negro
 ex
 234
-/*nice nice nice*/
-.4gg
+/*nice ni
 
-if(x==5);
+ce nice*/
+.4gg
+x=6*6+4-9;
+if(x==5){
+print("nigger");
+else{
+print("no more racism");
+}
