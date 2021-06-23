@@ -1,13 +1,12 @@
-hello my name is a TeaLang program
-  		nigga
-  		
-  		
-  		
-  		new line
-  		
-  		
+Hello this is a TeaLang program
+	negroZ.2
+
 negro
 ex
 234
+/*nice nice nice
+.4gg
 
-"
+if(x==5);
+
+/*ans
