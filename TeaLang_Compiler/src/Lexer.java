@@ -97,6 +97,9 @@ public class Lexer {
 
 			return transition_table[14][current_state];
 		} else if (encountered_char == '\u001a') {
+			
+			
+			
 			return transition_table[15][current_state];
 		}
 		// otherwise an unexpected character not in grammer, send 0 state
@@ -106,19 +109,19 @@ public class Lexer {
 
 	}
 
-	public static String readText(String filename) {
+	public static ArrayList<Token> readText(String filename) {
 		String data = "empty";
 		String entire = "";
 		String lexeme = "";
 		int state = 0;
 		int new_state;
 		boolean is_final = false;
-
+		int line_number = 0;
 		try {
 
 			File file = new File(filename);
 			Scanner sc = new Scanner(file);
-			int line_number = 0;
+			
 			while (sc.hasNextLine()) {
 				line_number++;
 				data = sc.nextLine();
@@ -180,13 +183,14 @@ public class Lexer {
 			// opens and reads the specified file
 		}
 		
+		lexedTokens.add(new Token(lexeme,line_number,state));
 		
 		for (Token token : lexedTokens) {
 
 			System.out.println(token.type);
 
 		}
-		return entire;
+		return lexedTokens;
 	}
 
 	public static int processChars(String text) {

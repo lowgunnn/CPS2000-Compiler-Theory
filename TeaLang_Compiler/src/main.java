@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 public class main {
 
@@ -5,8 +6,14 @@ public class main {
 		
 		
 		Lexer lexer  = new Lexer();
+		Parser parser = new Parser();
 		
-		String input = lexer.readText("example.txt");
+		ArrayList<Token> lexedTokens = new ArrayList<>();
+		
+		lexedTokens = lexer.readText("example.txt");
+		
+		parser.parseProgram(lexedTokens);
+		
 		
 		
 		

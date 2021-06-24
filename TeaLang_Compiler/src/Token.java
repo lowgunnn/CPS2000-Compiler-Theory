@@ -100,6 +100,7 @@ public class Token {
 			
 			}
 		case 22:
+			
 			return "End_Of_File";
 		
 		default:
