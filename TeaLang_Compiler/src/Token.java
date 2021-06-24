@@ -45,6 +45,8 @@ public class Token {
 				return "Return_Keyword";
 			case "if":
 				return "If_Keyword";
+			case "else":
+				return "Else_Keyword";
 			case "for":
 				return "For_Keyword";
 			case "while":
