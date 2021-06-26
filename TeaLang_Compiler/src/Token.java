@@ -98,7 +98,8 @@ public class Token {
 				return "Opening_Curly";
 			case "}":
 				return "Closing_Curly";
-		
+			case ",":
+				return "Comma";
 			
 			}
 		case 22:

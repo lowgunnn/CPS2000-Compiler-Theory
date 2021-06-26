@@ -8,11 +8,11 @@ public class Parser {
 	static String[] non_terminals = {"Program", "Block", "Statement", "VariableDecl", "Assignment" , "Print" ,"If" ,
 			"For" , "While" , "Return" , "Function" , "Params" , "Param" , "Type" , "Literal", "Expression" ,
 			"SimpleExpression", "RelationalOp", "Term" , "AdditiveOp" , "Factor", "MultiplicativeOp" , "FunctionCall", "SubExpression",
-			"Unary","ActualParams","Else"};
+			"Unary","ActualParams","Else", "Comma"};
 	static String[]terminals = { "Variable_Assigner", "Colon", "Equals", "Semi_Colon", "Print_Keyword" , "Return_Keyword" , "If_Keyword" , "Opening_Bracket" , "Closing_Bracket",
 						"Opening_Curly", "Closing_Curly", "Else_Keyword", "For_Keyword" ,"While_Keyword", "Float_Keyword" , "Int_Keyword","Bool_Keyword",
 						"String_Keyowrd", "Variable_Identifier", "Integer_Value" , "Float_Value", "True_Keyword", "False_Keyword", "String_Value", "Not_Keyword", "Asterisk",
-						"Division_Slash", "And_Keyword", "Or_Keyword", "Comparison", "Equality_Class", "Addition", "End_Of_File"
+						"Division_Slash", "And_Keyword", "Or_Keyword", "Comparison", "Equality_Class", "Addition", "End_Of_File" , "Comma"
 			
 	};
 	
@@ -20,38 +20,40 @@ public class Parser {
 	//1-8 statements including block and return?? its in the EBNF
 	static Stack<String >stack = new Stack<String>();
 	static int[][] parser_table ={ 
-		{1,0,0,0,2,6,3,0,0,8,0,0,4,5,7,7,7,7,26,0,0,0,0,0,0,0,0,0,0,0,0,0,21},  //program
-		{0,0,0,0,0,0,0,0,0,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  //block
-		{1,0,0,0,2,6,3,0,0,8,22,0,4,5,7,7,7,7,26,0,0,0,0,0,0,0,0,0,0,0,0,0,21},  //statement
-		{25,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  //varaible decl
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,27,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  //assignment
-		{0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  //print
-		{0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  //if
-		{0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  //for
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  //while
-		{0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  // return 
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,7,7,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  //function
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, //params
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, //param
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,10,10,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, //type
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,11,11,11,11,0,0,0,0,0,0,0,0,0}, //literal
-		{0,0,0,0,0,0,0,13,0,0,0,0,0,0,0,0,0,0,12,11,11,11,11,11,0,15,0,0,0,0,0,0,14,0}, //expression
-		{0,0,0,0,0,0,0,13,0,0,0,0,0,0,0,0,0,0,12,11,11,11,11,11,0,15,0,0,0,0,0,0,14,0}, //simple expression
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,16,0},			//additiveOp
-		{0,0,0,0,0,0,0,13,0,0,0,0,0,0,0,0,0,0,12,11,11,11,11,11,0,15,0,0,0,0,0,0,14,0}, //Term
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,17,17,17,0,0,0,0,0}, //MultipilicatievOp
-		{0,0,0,0,0,0,0,13,0,0,0,0,0,0,0,0,0,0,12,11,11,11,11,11,0,15,0,0,0,0,0,0,14,0}, //Factor
-		{0,0,0,0,0,0,0,0,0,24,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, //Returns 
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,18,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, //Function Call
-		{0,0,0,0,0,0,0,19,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},//SubExpression
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,20,0,0,0,0,0,0,20,0}, //Unary
-		{0,0,0,0,0,0,0,13,0,0,0,0,0,0,0,0,0,0,12,11,11,11,11,11,0,15,0,0,0,0,0,0,14,0},//ActualParams
-		{0,0,0,0,0,0,0,0,0,0,0,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} //Else-Statements
+		{1,0,0,0,2,6,3,0,0,8,0,0,4,5,7,7,7,7,26,0,0,0,0,0,0,0,0,0,0,0,0,0,21,0},  //program
+		{0,0,0,0,0,0,0,0,0,8,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  //block
+		{1,0,0,0,2,6,3,0,0,8,22,23,4,5,7,7,7,7,26,0,0,0,0,0,0,0,0,0,0,0,0,0,21,0},  //statement
+		{25,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  //varaible decl
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,27,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  //assignment
+		{0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  //print
+		{0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  //if
+		{0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  //for
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  //while
+		{0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  // return 
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,7,7,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  //function
+		{0,0,0,0,0,0,0,0,28,0,0,0,0,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,29}, //params
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, //param
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,10,10,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, //type
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,11,11,11,11,0,0,0,0,0,0,0,0,0,0}, //literal
+		{0,0,0,0,0,0,0,13,0,0,0,0,0,0,0,0,0,0,12,11,11,11,11,11,0,15,0,0,0,0,0,0,14,0,0}, //expression
+		{0,0,0,0,0,0,0,13,0,0,0,0,0,0,0,0,0,0,12,11,11,11,11,11,0,15,0,0,0,0,0,0,14,0,0}, //simple expression
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,16,0,0},			//additiveOp
+		{0,0,0,0,0,0,0,13,0,0,0,0,0,0,0,0,0,0,12,11,11,11,11,11,0,15,0,0,0,0,0,0,14,0,0}, //Term
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,17,17,17,0,0,0,0,0,0}, //MultipilicatievOp
+		{0,0,0,0,0,0,0,13,0,0,0,0,0,0,0,0,0,0,12,11,11,11,11,11,0,15,0,0,0,0,0,0,14,0,0}, //Factor
+		{0,0,0,0,0,0,0,0,0,24,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, //Returns 
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,18,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, //Function Call
+		{0,0,0,0,0,0,0,19,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},//SubExpression
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,20,0,0,0,0,0,0,20,0,0}, //Unary
+		{0,0,0,0,0,0,0,13,0,0,0,0,0,0,0,0,0,0,12,11,11,11,11,11,0,15,0,0,0,0,0,0,14,0,0},//ActualParams
+		{0,0,0,0,0,0,0,0,0,0,0,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, //Else-Statements
+		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} //Comma
 		};
 	
 	
 	public static void parseSyntax(int production_rule) {
 		
+		//based on the production rule, the contents of the stack are adjusted
 		switch(production_rule) {
 		
 		case 1:
@@ -72,8 +74,7 @@ public class Parser {
 			break;
 		case 3:
 			//if statements 
-			stack.push("Statement");
-			stack.push("Else");
+			//no need to add statement terminal since block does it
 			stack.push("Block");
 			stack.push("Closing_Bracket");
 			stack.push("Expression");
@@ -82,7 +83,6 @@ public class Parser {
 		case 4:
 			//For Loop
 			System.out.println("Entered For-Loop");
-			stack.push("Statement");
 			stack.push("Block");
 			stack.push("Closing_Bracket");
 			stack.push("Assignment");
@@ -92,28 +92,48 @@ public class Parser {
 			stack.push("Opening_Bracket");
 			break;	
 		case 5:
+			//while loop
 			System.out.println("Entered While Loop");
-			stack.push("Statement");
 			stack.push("Block");
 			stack.push("Closing_Bracket");
 			stack.push("Expression");
 			stack.push("Opening_Bracket");
 			break;
 		case 6:
+			//returns
 			stack.push("Expression");
 			break;
+		case 7:
+			//Function Declarations
+			stack.push("Block");
+			stack.push("Closing_Bracket");
+			stack.push("Params");
+			stack.push("Opening_Bracket");
+			stack.push("Variable_Identifier");  //I am aware that function names are not variables but does not make a difference 
+			break;
 		case 8:
+			//block
 			System.out.println("ENTERED BLOCK");
 			stack.push("Statement");
 			stack.push("Closing_Curly");
 			stack.push("Statement");
 			break;
+			
+		case 9:
+			//Parameters
+			stack.push("Params");
+			stack.push("Type");
+			stack.push("Colon");
+			break;
+			
+		case 10:
+			break;
 		case 21:
+			System.out.println(stack);
 			System.out.println("Successfully Parsed!");
 			break;
 		case 22:
-			stack.pop();
-			stack.pop();
+			stack.pop(); //pops the closing curling bracket
 			System.out.println("EXITTED BLOCK~~~~~~~~~~~~~~~~~~~~~~~");
 			//end of block
 			break;
@@ -140,8 +160,18 @@ public class Parser {
 			stack.push("Semi_Colon");
 			stack.push("Expression");
 			stack.push("Equals");
+			break;
 			
-			
+		case 28:
+			System.out.println("No more parameters!");
+			stack.pop(); //pops the closing bracket expected afterwards
+			System.out.println("POPPED");
+			break;
+		case 29:
+			stack.push("Params");
+			stack.push("Type");
+			stack.push("Colon");
+			stack.push("Variable_Identifier");
 		}
 		
 			
@@ -177,7 +207,8 @@ public class Parser {
 			System.out.println(stack.peek()+current_token.type);
 			System.out.println("STACK: "+stack);
 			
-			
+			//loop should never reach this point,
+			//will only reach it if there are expected to be more variables
 			if(stack.peek() == "$") {
 					
 					if(index != no_of_tokens-1) {
