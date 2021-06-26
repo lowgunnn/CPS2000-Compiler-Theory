@@ -1,16 +1,43 @@
-Hello this is a TeaLang program
-	negroZ.2
+{{{{
+if(False){
 
-negro
-ex
-234
-/*nice ni
+print 12;
 
-ce nice*/
-.4gg
-x=6*6+4-9;
-if(x==5){
-print("nigger");
-else{
-print("no more racism");
+print 12;
+
+print 12;
+
+let num : int = 23;
+
+print 12; }else
+{
+print 12;
+
+print 12;
+
+print 12;
+
+print 12;
+
+
 }
+
+}
+}
+}
+
+}
+
+
+
+for(let num : int = 0; 23; num = 23;){
+
+while(5){
+}
+
+}
+
+nu = 5;
+sf_21_1dd = 2354;
+
+print 12;

@@ -33,7 +33,10 @@ public class Lexer {
 	public static int new_state_transition(int current_state, char encountered_char) {
 
 		int ascii_value = (int) encountered_char;
-
+		
+		//NB: Insejt li fil-Java tista taghmel switch statement b strings, ghalhekk sensiela ta cursed else if statements
+		
+		//lexer works, will not touch again
 		// digits
 		if (ascii_value <= 57 && ascii_value >= 48) {
 
@@ -122,7 +125,13 @@ public class Lexer {
 			File file = new File(filename);
 			Scanner sc = new Scanner(file);
 			
+			if(!sc.hasNextLine()) {
+				System.out.println("File Empty");
+				System.exit(1);
+			}
+			
 			while (sc.hasNextLine()) {
+				
 				line_number++;
 				data = sc.nextLine();
 				entire = data + "\n";
@@ -130,10 +139,11 @@ public class Lexer {
 				if (!sc.hasNextLine()) {
 					entire += '\u001a';
 				}
-
+				
+				
 				for (int i = 0; i < entire.length(); i++) {
 					char encountered_char = entire.charAt(i);
-
+					
 					// skips initials spaces or newlines before tokens, this does not include those
 					// inside " " string identifiers since previously we would have encountered an
 					// inverted comma
@@ -182,7 +192,7 @@ public class Lexer {
 			System.out.println("An error occurred.\nThe file " + filename + " was not found");
 			// opens and reads the specified file
 		}
-		
+		//adds EOF Token
 		lexedTokens.add(new Token(lexeme,line_number,state));
 		
 		for (Token token : lexedTokens) {
