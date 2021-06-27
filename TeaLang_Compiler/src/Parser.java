@@ -3,6 +3,7 @@ import java.util.*;
 
 public class Parser {
 
+	static AST root = new AST("ProgramNode");
 	
 	
 	static String[] non_terminals = {"Program", "Block", "Statement", "VariableDecl", "Assignment" , "Print" ,"If" ,
@@ -11,7 +12,7 @@ public class Parser {
 			"Unary","ActualParams","Else", "Comma"};
 	static String[]terminals = { "Variable_Assigner", "Colon", "Equals", "Semi_Colon", "Print_Keyword" , "Return_Keyword" , "If_Keyword" , "Opening_Bracket" , "Closing_Bracket",
 						"Opening_Curly", "Closing_Curly", "Else_Keyword", "For_Keyword" ,"While_Keyword", "Float_Keyword" , "Int_Keyword","Bool_Keyword",
-						"String_Keyowrd", "Variable_Identifier", "Integer_Value" , "Float_Value", "True_Keyword", "False_Keyword", "String_Value", "Not_Keyword", "Asterisk",
+						"String_Keyword", "Variable_Identifier", "Integer_Value" , "Float_Value", "True_Keyword", "False_Keyword", "String_Value", "Not_Keyword", "Asterisk",
 						"Division_Slash", "And_Keyword", "Or_Keyword", "Comparison", "Equality_Class", "Addition", "End_Of_File" , "Comma"
 			
 	};
@@ -51,12 +52,14 @@ public class Parser {
 		};
 	
 	
-	public static void parseSyntax(int production_rule, Token next_token) {
+	public static void parseSyntax(int production_rule, Token current_token, Token next_token) {
 		
 		//based on the production rule, the contents of the stack are adjusted
 		switch(production_rule) {
 		
 		case 1:
+			root.addNode("VariableDecl");
+			root = root.switchRoot(root);
 			//declaring variables
 			stack.push("Statement");
 			stack.push("Semi_Colon");
@@ -68,6 +71,7 @@ public class Parser {
 			break;
 		case 2:
 			//print statements
+			root.addNode("PrintStatements");
 			stack.push("Statement");
 			stack.push("Semi_Colon");
 			stack.push("Expression");
@@ -75,6 +79,7 @@ public class Parser {
 		case 3:
 			//if statements 
 			//no need to add statement terminal since block does it
+			root.addNode("IfStatements");
 			stack.push("Block");
 			stack.push("Closing_Bracket");
 			stack.push("Expression");
@@ -82,6 +87,8 @@ public class Parser {
 			break;
 		case 4:
 			//For Loop
+			root.addNode("ForLoop");
+			root = root.switchRoot(root);
 			System.out.println("Entered For-Loop");
 			stack.push("Block");
 			stack.push("Closing_Bracket");
@@ -93,6 +100,7 @@ public class Parser {
 			break;	
 		case 5:
 			//while loop
+			root.addNode("WhileLoop");
 			System.out.println("Entered While Loop");
 			stack.push("Block");
 			stack.push("Closing_Bracket");
@@ -101,10 +109,13 @@ public class Parser {
 			break;
 		case 6:
 			//returns
+			root.addNode("ReturnStatement");
+			stack.push("Statement");
 			stack.push("Expression");
 			break;
 		case 7:
 			//Function Declarations
+			root.addNode("FunctionDecl");
 			stack.push("Block");
 			stack.push("Closing_Bracket");
 			stack.push("Params");
@@ -113,6 +124,10 @@ public class Parser {
 			break;
 		case 8:
 			//block
+			if(root.childNodes.get(root.childNodes.size() - 1).node_type != "ElseBlock") {
+			root.addNode("Block");
+			}
+			root = root.switchRoot(root);
 			System.out.println("ENTERED BLOCK");
 			stack.push("Statement");
 			stack.push("Closing_Curly");
@@ -121,6 +136,9 @@ public class Parser {
 			
 		case 9:
 			//Parameters
+			root.addNode("FormalParams");
+			root = root.switchRoot(root);
+			root.addNode("Variable_Identifier",current_token.value);
 			stack.push("Params");
 			stack.push("Type");
 			stack.push("Colon");
@@ -189,15 +207,22 @@ public class Parser {
 		// a) Production Rules brought about by use of Follow-Sets, I first started iplementing only those which make use of the FIRST Set
 		// b) Cases which I did not think of
 		case 21:
-			System.out.println(stack);
-			System.out.println("Successfully Parsed!");
+			
 			break;
 		case 22:
+			root = root.parentNode;
+			if(root.node_type == "ForLoop" || root.node_type == "WhileLoop" || root.node_type == "FunctionDecl" ) {
+				root = root.parentNode;
+			}
+			if(root.node_type == "IfStatement" && next_token.type != "Else_Keyowrd") {
+				root = root.parentNode;
+			}
 			stack.pop(); //pops the closing curling bracket
 			System.out.println("EXITTED BLOCK~~~~~~~~~~~~~~~~~~~~~~~");
 			//end of block
 			break;
 		case 23:
+			root.addNode("ElseBlock");
 			stack.push("Block");
 			break;
 		case 25:
@@ -212,18 +237,21 @@ public class Parser {
 			break;
 		case 26:
 			//variable assignment   -> onestament ma nax kif insejta din lol
+			root.addNode("VariableAssignment");
 			stack.push("Statement");
 			stack.push("Semi_Colon");
 			stack.push("Expression");
 			stack.push("Equals");
 			break;
 		case 27:
+			root.addNode("VariableAssignment");
 			stack.push("Semi_Colon");
 			stack.push("Expression");
 			stack.push("Equals");
 			break;
 			
 		case 28:
+			root = root.parentNode;
 			System.out.println("No more parameters!");
 			stack.pop(); //pops the closing bracket expected afterwards
 			System.out.println("POPPED");
@@ -546,7 +574,13 @@ public class Parser {
 					
 				}
 				
+				if(last_terminal == "Variable_Identifier") {
+				root.addNode(current_token.type,current_token.value);
+				}
 				
+				if(current_token.type == "Semi_Colon") {
+					root = root.parentNode;
+					}
 			}
 			else {
 				//it was a non-terminal
@@ -567,7 +601,7 @@ public class Parser {
 				}
 				else {
 					
-						parseSyntax(production_rule, next_token);
+						parseSyntax(production_rule,current_token, next_token);
 		
 					
 					
@@ -581,10 +615,28 @@ public class Parser {
 			
 		}
 		
+		if(stack.peek() != "$") {
+			System.out.println("Syntax Error at EOF!");
+		}
+		else {
+			System.out.println("Succesfully Parsed");
+		}
 		
 		
 		
-		
+		for (AST nodes : root.childNodes) {
+
+			System.out.println(nodes.node_type);
+			
+			if(nodes.node_type == "Block" || nodes.node_type == "ElseBlock") {
+				System.out.println("~~~~~~~~~~~BLOCK~~~~~~~~~~~~~~~~~~~~~");
+				for(AST childs : nodes.childNodes) {
+					System.out.println(childs.node_type);
+				}
+				System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+			}
+
+		}
 	}
 	
 	
