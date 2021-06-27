@@ -34,17 +34,18 @@ public class Parser {
 		{0,0,0,0,0,0,0,0,28,0,0,0,0,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,29}, //params
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,10,10,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, //type
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,11,11,11,11,0,0,0,0,0,0,0,0,0,0}, //literal
-		{0,0,0,0,0,0,0,13,0,0,0,0,0,0,0,0,0,0,12,11,11,11,11,11,0,15,0,0,0,0,0,0,14,0,0}, //expression
-		{0,0,0,0,0,0,0,13,0,0,0,0,0,0,0,0,0,0,12,11,11,11,11,11,0,15,0,0,0,0,0,0,14,0,0}, //simple expression
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,16,0,0},			//additiveOp
-		{0,0,0,0,0,0,0,13,0,0,0,0,0,0,0,0,0,0,12,11,11,11,11,11,0,15,0,0,0,0,0,0,14,0,0}, //Term
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,17,17,17,0,0,0,0,0,0}, //MultipilicatievOp
-		{0,0,0,0,0,0,0,13,0,0,0,0,0,0,0,0,0,0,12,11,11,11,11,11,0,15,0,0,0,0,0,0,14,0,0}, //Factor
+		{0,0,0,0,0,0,0,13,0,0,0,0,0,0,0,0,0,0,12,11,11,11,11,11,0,14,0,0,0,0,0,0,14,0,0}, //expression
+		{0,0,0,0,0,0,0,13,0,0,0,0,0,0,0,0,0,0,12,11,11,11,11,11,0,14,0,0,0,0,0,0,14,0,0}, //simple expression
+		{0,0,0,32,0,0,0,0,32,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,16,0,32},	//relationalOp
+		{0,0,0,0,0,0,0,13,0,0,0,0,0,0,0,0,0,0,12,11,11,11,11,11,0,14,0,0,0,0,0,0,14,0,0}, //Term
+		{0,0,0,31,0,0,0,0,31,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,16,0,0,16,0,31},			//additiveOp
+		{0,0,0,0,0,0,0,13,0,0,0,0,0,0,0,0,0,0,12,11,11,11,11,11,0,14,0,0,0,0,0,0,14,0,0}, //Factor
+		{0,0,0,30,0,0,0,0,30,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,17,17,17,0,0,0,0,0,30}, //MultipilicatievOp
 		{0,0,0,0,0,0,0,0,0,24,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, //Returns 
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,18,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, //Function Call
 		{0,0,0,0,0,0,0,19,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},//SubExpression
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,20,0,0,0,0,0,0,20,0,0}, //Unary
-		{0,0,0,0,0,0,0,13,0,0,0,0,0,0,0,0,0,0,12,11,11,11,11,11,0,15,0,0,0,0,0,0,14,0,0},//ActualParams
+		{0,0,0,0,0,0,0,13,0,0,0,0,0,0,0,0,0,0,12,11,11,11,11,11,0,14,0,0,0,0,0,0,14,0,0},//ActualParams
 		{0,0,0,0,0,0,0,0,0,0,0,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, //Else-Statements
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} //Comma
 		};
@@ -127,6 +128,68 @@ public class Parser {
 			
 		case 10:
 			break;
+		
+		case 11:
+			stack.push("SimpleExpression");
+			stack.push("RelationalOp");
+			stack.push("Term");
+			stack.push("AdditiveOp");
+			stack.push("Factor");
+			stack.push("MultiplicativeOp");  
+			break;
+			
+		case 12:
+			
+			if(stack.peek()== "(") {
+				//function call
+				stack.push("SimpleExpression");
+				stack.push("RelationalOp");
+				stack.push("Term");
+				stack.push("AdditiveOp");
+				stack.push("Factor");
+				stack.push("MultiplicativeOp");
+				stack.push(")");
+				stack.push("ActualParams");
+				stack.push("(");
+			}else {
+				stack.push("SimpleExpression");
+				stack.push("RelationalOp");
+				stack.push("Term");
+				stack.push("AdditiveOp");
+				stack.push("Factor");
+				stack.push("MultiplicativeOp");  
+			}
+			
+			break;
+		case 13:
+			//sub-expression
+			stack.push("SimpleExpression");
+			stack.push("RelationalOp");
+			stack.push("Term");
+			stack.push("AdditiveOp");
+			stack.push("Factor");
+			stack.push("MultiplicativeOp");
+			stack.push(")");
+			stack.push("Expression");
+			break;
+			
+		case 14:
+			stack.push("SimpleExpression");
+			stack.push("RelationalOp");
+			stack.push("Term");
+			stack.push("AdditiveOp");
+			stack.push("Factor");
+			stack.push("MultiplicativeOp");  
+			stack.push("Expression");
+			break;
+		case 17:
+			//Multiplicative Op Encountered
+			stack.push("MultiplicativeOp");
+			stack.push("Factor");
+			break;
+		//These cases may be numbered wrong because are either
+		// a) Production Rules brought about by use of Follow-Sets, I first started iplementing only those which make use of the FIRST Set
+		// b) Cases which I did not think of
 		case 21:
 			System.out.println(stack);
 			System.out.println("Successfully Parsed!");
@@ -141,6 +204,7 @@ public class Parser {
 			break;
 		case 25:
 			// secondary variable declaration parse rule, this does not include adding other statement afterwards
+			//used for one-off for loop variable declarations
 			stack.push("Semi_Colon");
 			stack.push("Expression");
 			stack.push("Equals");
@@ -167,10 +231,33 @@ public class Parser {
 			System.out.println("POPPED");
 			break;
 		case 29:
+			//Parameters
 			stack.push("Params");
 			stack.push("Type");
 			stack.push("Colon");
 			stack.push("Variable_Identifier");
+			break;
+		case 30:
+			//END THE EXPRESSION AT LOWEST RECURSION
+			stack.pop(); //FACTOR
+			stack.pop(); //ADDITIVE
+			stack.pop(); //TERM
+			stack.pop(); //RELATIONAL
+			stack.pop(); //SIMPLE EXP
+			stack.pop(); //FOLLOW CHAR -> ; ) ,
+			break;
+		case 31:
+			//END THE EXPRESSION AT SECOND LOWEST RECURSION
+			stack.pop(); //TERM
+			stack.pop(); //RELATIONAL
+			stack.pop(); //SIMPLE EXP
+			stack.pop(); //FOLLOW CHAR -> ; ) ,
+			break;
+		case 32:
+			//END THE EXPRESSION AT HIGHEST RECURSION
+			stack.pop(); //SIMPLE EXP
+			stack.pop(); //FOLLOW CHAR -> ; ) ,
+			break;
 		}
 		
 			
