@@ -40,12 +40,12 @@ public class Parser {
 		{0,0,0,0,0,0,0,39,0,0,0,0,0,0,0,0,0,0,38,37,37,37,37,37,0,40,0,0,0,0,0,0,40,0,0}, //Term
 		{0,0,0,31,0,0,0,0,31,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,45,45,45,17,32,32,17,0,31}, //additiveOp
 		{0,0,0,0,0,0,0,35,0,0,0,0,0,0,0,0,0,0,34,33,33,33,33,33,0,36,0,0,0,0,0,0,36,0,0}, //Factor
-		{0,0,0,30,0,0,0,0,30,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,17,17,17,32,31,31,32,0,30}, //MultipilicatievOp
+		{0,0,0,30,0,0,0,0,53,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,17,17,17,32,31,31,32,0,30}, //MultipilicatievOp
 		{0,0,0,0,0,0,0,0,0,24,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, //Returns 
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,18,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, //Function Call
 		{0,0,0,0,0,0,0,19,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},//SubExpression
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,20,0,0,0,0,0,0,20,0,0}, //Unary
-		{0,0,0,53,0,0,0,50,28,0,0,0,0,0,0,0,0,0,49,48,48,48,48,48,0,51,0,0,0,0,0,0,51,0,52},//ActualParams
+		{0,0,0,0,0,0,0,50,28,0,0,0,0,0,0,0,0,0,49,48,48,48,48,48,0,51,0,0,0,0,0,0,51,0,52},//ActualParams
 		{0,0,0,0,0,0,0,0,0,0,0,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, //Else-Statements
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0} //Comma
 		};
@@ -242,8 +242,9 @@ public class Parser {
 			stack.pop(); //TERM
 			stack.pop(); //RELATIONAL
 			stack.pop(); //SIMPLE EXP
-			if(stack.peek() != "ActualParams")
+			if(stack.peek() != "ActualParams") 
 			stack.pop(); //FOLLOW CHAR -> ; ) ,
+			
 			break;
 		case 31:
 			//END THE EXPRESSION AT SECOND LOWEST RECURSION
@@ -456,9 +457,20 @@ public class Parser {
 			stack.push("ActualParams");
 			stack.push("Expression");
 			break;
+			
 		case 53:
-			stack.pop(); //no more params, remove the bracket
-			break;
+			stack.pop(); //FACTOR
+			stack.pop(); //ADDITIVE
+			stack.pop(); //TERM
+			stack.pop(); //RELATIONAL
+			stack.pop();
+			if(stack.peek() == "ActualParams") {
+				stack.pop();
+				stack.pop();
+			}
+			else {
+				stack.pop();
+			}
 		}
 		
 		
