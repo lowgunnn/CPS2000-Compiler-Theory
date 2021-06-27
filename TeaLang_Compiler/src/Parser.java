@@ -6,7 +6,7 @@ public class Parser {
 	
 	
 	static String[] non_terminals = {"Program", "Block", "Statement", "VariableDecl", "Assignment" , "Print" ,"If" ,
-			"For" , "While" , "Return" , "Function" , "Params" , "Param" , "Type" , "Literal", "Expression" ,
+			"For" , "While" , "Return" , "Function" , "Params" ,  "Type" , "Literal", "Expression" ,
 			"SimpleExpression", "RelationalOp", "Term" , "AdditiveOp" , "Factor", "MultiplicativeOp" , "FunctionCall", "SubExpression",
 			"Unary","ActualParams","Else", "Comma"};
 	static String[]terminals = { "Variable_Assigner", "Colon", "Equals", "Semi_Colon", "Print_Keyword" , "Return_Keyword" , "If_Keyword" , "Opening_Bracket" , "Closing_Bracket",
@@ -32,7 +32,6 @@ public class Parser {
 		{0,0,0,0,0,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  // return 
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,7,7,7,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},  //function
 		{0,0,0,0,0,0,0,0,28,0,0,0,0,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,29}, //params
-		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, //param
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,10,10,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, //type
 		{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,11,11,11,11,11,0,0,0,0,0,0,0,0,0,0}, //literal
 		{0,0,0,0,0,0,0,13,0,0,0,0,0,0,0,0,0,0,12,11,11,11,11,11,0,15,0,0,0,0,0,0,14,0,0}, //expression
@@ -207,8 +206,7 @@ public class Parser {
 			System.out.println(stack.peek()+current_token.type);
 			System.out.println("STACK: "+stack);
 			
-			//loop should never reach this point,
-			//will only reach it if there are expected to be more variables
+			
 			if(stack.peek() == "$") {
 					
 					if(index != no_of_tokens-1) {

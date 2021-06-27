@@ -90,7 +90,7 @@ public class Lexer {
 		}
 		// one spacers
 		else if (encountered_char == ';' || encountered_char == ':' || encountered_char == '('
-				|| encountered_char == ')' || encountered_char == '{' || encountered_char == '}') {
+				|| encountered_char == ')' || encountered_char == '{' || encountered_char == '}' || encountered_char == ',') {
 			return transition_table[11][current_state];
 		} else if (encountered_char == '\n') {
 			return transition_table[12][current_state];
