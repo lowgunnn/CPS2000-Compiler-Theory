@@ -14,13 +14,13 @@ Repeatable items are enclosed in curly brackets ({ . . . }); the items within ca
 more times. For example, a Block consists of zero or more Statement enclosed in curly brackets.
 
 〈Letter〉::= [A-Za-z] <br>
-〈Digit〉::= [0-9]
-〈Printable〉::= [\x20-\x7E]
-〈Type〉::= ‘float’ | ‘int’ | ‘bool’ | ‘string’
-〈BooleanLiteral 〉::= ‘true’ | ‘false’
-〈IntegerLiteral 〉::= 〈Digit〉{ 〈Digit〉}
-〈FloatLiteral 〉::= 〈Digit〉{ 〈Digit〉} ‘.’ 〈Digit〉{ 〈Digit〉}
-〈StringLiteral 〉::= ‘"’ { 〈Printable〉} ‘"’
+〈Digit〉::= [0-9]<br>
+〈Printable〉::= [\x20-\x7E]<br>
+〈Type〉::= ‘float’ | ‘int’ | ‘bool’ | ‘string’<br>
+〈BooleanLiteral 〉::= ‘true’ | ‘false’<br>
+〈IntegerLiteral 〉::= 〈Digit〉{ 〈Digit〉}<br>
+〈FloatLiteral 〉::= 〈Digit〉{ 〈Digit〉} ‘.’ 〈Digit〉{ 〈Digit〉}<br>
+〈StringLiteral 〉::= ‘"’ { 〈Printable〉} ‘"’<br>
 〈Literal 〉::= 〈BooleanLiteral 〉
               | 〈IntegerLiteral 〉
               | 〈FloatLiteral 〉
