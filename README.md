@@ -25,33 +25,33 @@ more times. For example, a Block consists of zero or more Statement enclosed in 
               | 〈IntegerLiteral 〉
               | 〈FloatLiteral 〉
               | 〈StringLiteral 〉<br>
-〈Identifier 〉::= ( ‘ ’ | 〈Letter 〉) { ‘ ’ | 〈Letter 〉| 〈Digit〉}
-〈MultiplicativeOp〉::= ‘*’ | ‘/’ | ‘and’
-〈AdditiveOp〉::= ‘+’ | ‘-’ | ‘or’
-〈RelationalOp〉::= ‘<’ | ‘>’ | ‘==’ | ‘!=’ | ‘<=’ | ‘>=’
-〈ActualParams〉::= 〈Expression〉{ ‘,’ 〈Expression〉}
-〈FunctionCall 〉::= 〈Identifier 〉‘(’ [ 〈ActualParams〉] ‘)’
-〈SubExpression〉::= ‘(’ 〈Expression〉‘)’
-〈Unary〉::= ( ‘-’ | ‘not’ ) 〈Expression〉
+〈Identifier 〉::= ( ‘ ’ | 〈Letter 〉) { ‘ ’ | 〈Letter 〉| 〈Digit〉}<br>
+〈MultiplicativeOp〉::= ‘*’ | ‘/’ | ‘and’<br>
+〈AdditiveOp〉::= ‘+’ | ‘-’ | ‘or’<br>
+〈RelationalOp〉::= ‘<’ | ‘>’ | ‘==’ | ‘!=’ | ‘<=’ | ‘>=’<br>
+〈ActualParams〉::= 〈Expression〉{ ‘,’ 〈Expression〉}<br>
+〈FunctionCall 〉::= 〈Identifier 〉‘(’ [ 〈ActualParams〉] ‘)’<br>
+〈SubExpression〉::= ‘(’ 〈Expression〉‘)’<br>
+〈Unary〉::= ( ‘-’ | ‘not’ ) 〈Expression〉<br>
 〈Factor 〉::= 〈Literal 〉
              | 〈Identifier 〉
              | 〈FunctionCall 〉
              | 〈SubExpression〉
-             | 〈Unary〉
+             | 〈Unary〉<br>
 
-〈Term〉::= 〈Factor 〉{ 〈MultiplicativeOp〉〈Factor 〉}
-〈SimpleExpression〉::= 〈Term〉{ 〈AdditiveOp〉〈Term〉}
-〈Expression〉::= 〈SimpleExpression〉{ 〈RelationalOp〉〈SimpleExpression〉}
-〈Assignment〉::= 〈Identifier 〉‘=’ 〈Expression〉
-〈VariableDecl 〉::= ‘let’ 〈Identifier 〉‘:’ 〈Type〉‘=’ 〈Expression〉
-〈PrintStatement〉::= ‘print’ 〈Expression〉
-〈RtrnStatement〉::= ‘return’ 〈Expression〉
-〈IfStatement〉::= ‘if’ ‘(’ 〈Expression〉‘)’ 〈Block〉[ ‘else’ 〈Block〉]
-〈ForStatement〉::= ‘for’ ‘(’ [ 〈VariableDecl 〉] ’;’ 〈Expression〉’;’ [ 〈Assignment〉] ‘)’ 〈Block〉
-〈WhileStatement〉::= ‘while’ ‘(’ 〈Expression〉‘)’ 〈Block〉
-〈FormalParam〉::= 〈Identifier 〉‘:’ 〈Type〉
-〈FormalParams〉::= 〈FormalParam〉{ ‘,’ 〈FormalParam〉}
-〈FunctionDecl 〉::= 〈type〉〈Identifier 〉‘(’ [ 〈FormalParams〉] ‘)’ 〈Block〉
+〈Term〉::= 〈Factor 〉{ 〈MultiplicativeOp〉〈Factor 〉}<br>
+〈SimpleExpression〉::= 〈Term〉{ 〈AdditiveOp〉〈Term〉}<br>
+〈Expression〉::= 〈SimpleExpression〉{ 〈RelationalOp〉〈SimpleExpression〉}<br>
+〈Assignment〉::= 〈Identifier 〉‘=’ 〈Expression〉<br>
+〈VariableDecl 〉::= ‘let’ 〈Identifier 〉‘:’ 〈Type〉‘=’ 〈Expression〉<br>
+〈PrintStatement〉::= ‘print’ 〈Expression〉<br>
+〈RtrnStatement〉::= ‘return’ 〈Expression〉<br>
+〈IfStatement〉::= ‘if’ ‘(’ 〈Expression〉‘)’ 〈Block〉[ ‘else’ 〈Block〉]<br>
+〈ForStatement〉::= ‘for’ ‘(’ [ 〈VariableDecl 〉] ’;’ 〈Expression〉’;’ [ 〈Assignment〉] ‘)’ 〈Block〉<br>
+〈WhileStatement〉::= ‘while’ ‘(’ 〈Expression〉‘)’ 〈Block〉<br>
+〈FormalParam〉::= 〈Identifier 〉‘:’ 〈Type〉<br>
+〈FormalParams〉::= 〈FormalParam〉{ ‘,’ 〈FormalParam〉}<br>
+〈FunctionDecl 〉::= 〈type〉〈Identifier 〉‘(’ [ 〈FormalParams〉] ‘)’ 〈Block〉<br>
 〈Statement〉::= 〈VariableDecl 〉‘;’
                 | 〈Assignment〉‘;’
                 | 〈PrintStatement〉‘;’
@@ -60,6 +60,6 @@ more times. For example, a Block consists of zero or more Statement enclosed in 
                 | 〈WhileStatement〉
                 | 〈RtrnStatement〉‘;’
                 | 〈FunctionDecl 〉
-                | 〈Block〉
-〈Block〉::= ‘{’ { 〈Statement〉} ‘}’
-〈Program〉::= { 〈Statement〉}
+                | 〈Block〉<br>
+〈Block〉::= ‘{’ { 〈Statement〉} ‘}’<br>
+〈Program〉::= { 〈Statement〉}<br>
