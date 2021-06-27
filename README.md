@@ -13,7 +13,7 @@ enclosed in square brackets ([ . . . ]) indicating that the item can either be i
 Repeatable items are enclosed in curly brackets ({ . . . }); the items within can be repeated zero or
 more times. For example, a Block consists of zero or more Statement enclosed in curly brackets.
 
-〈Letter〉::= [A-Za-z]
+〈Letter〉::= [A-Za-z] <br>
 〈Digit〉::= [0-9]
 〈Printable〉::= [\x20-\x7E]
 〈Type〉::= ‘float’ | ‘int’ | ‘bool’ | ‘string’
