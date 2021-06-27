@@ -20,11 +20,11 @@ more times. For example, a Block consists of zero or more Statement enclosed in 
 〈BooleanLiteral 〉::= ‘true’ | ‘false’<br>
 〈IntegerLiteral 〉::= 〈Digit〉{ 〈Digit〉}<br>
 〈FloatLiteral 〉::= 〈Digit〉{ 〈Digit〉} ‘.’ 〈Digit〉{ 〈Digit〉}<br>
-〈StringLiteral 〉::= ‘"’ { 〈Printable〉} ‘"’<br>
+〈StringLiteral 〉::= ‘ " ’ { 〈Printable〉} ‘ " ’<br>
 〈Literal 〉::= 〈BooleanLiteral 〉
               | 〈IntegerLiteral 〉
               | 〈FloatLiteral 〉
-              | 〈StringLiteral 〉
+              | 〈StringLiteral 〉<br>
 〈Identifier 〉::= ( ‘ ’ | 〈Letter 〉) { ‘ ’ | 〈Letter 〉| 〈Digit〉}
 〈MultiplicativeOp〉::= ‘*’ | ‘/’ | ‘and’
 〈AdditiveOp〉::= ‘+’ | ‘-’ | ‘or’
