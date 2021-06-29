@@ -245,12 +245,17 @@ public class Parser {
 
 			break;
 		case 22:
+			if(root.node_type == "ElseBlock") {
+				root = root.parentNode;
+				root = root.parentNode;
+			}else {
 			root = root.parentNode;
 			if (root.node_type == "ForLoop" || root.node_type == "WhileLoop" || root.node_type == "FunctionDecl") {
 				root = root.parentNode;
 			}
 			if (root.node_type == "IfStatement" && next_token.type != "Else_Keyowrd") {
 				root = root.parentNode;
+			}
 			}
 			stack.pop(); // pops the closing curling bracket
 			System.out.println("EXITTED BLOCK~~~~~~~~~~~~~~~~~~~~~~~");
@@ -265,7 +270,7 @@ public class Parser {
 			// statement afterwards
 			// used for one-off declarations like in for loop variable declarations
 			root.addNode("VariableDecl");
-			root.switchRoot(root);
+			root = root.switchRoot(root);
 			stack.push("Semi_Colon");
 			stack.push("Expression");
 			stack.push("Equals");
@@ -324,6 +329,7 @@ public class Parser {
 				//root.addNode("ExpressionEnded");
 				
 				root = root.expressionEscape(root);
+				root = root.parentNode;
 				// while(root.parentNode.node_type != "Operator") {
 				// root = root.parentNode;
 				// }
@@ -349,6 +355,7 @@ public class Parser {
 				//System.exit(1);
 				
 				root = root.expressionEscape(root);
+				root = root.parentNode;
 
 				// while(root.parentNode.node_type != "Operator") {
 				// root = root.parentNode;
@@ -374,6 +381,7 @@ public class Parser {
 				//root.addNode("ExpressionEnded");
 				
 				root = root.expressionEscape(root);
+				root=root.parentNode;
 				// while(root.parentNode.node_type != "Operator") {
 				// root = root.parentNode;
 				// }
@@ -717,7 +725,7 @@ public class Parser {
 				}
 
 				if (last_terminal == "Variable_Identifier") {
-
+					
 					root.addNode(current_token.type, current_token.value);
 
 				}

@@ -18,6 +18,13 @@ public class AST {
 		
 	}
 	
+	public AST(AST source) {
+        this.parentNode = source.parentNode;
+        this.node_type = source.node_type;
+		this.value = source.value;
+		this.childNodes = source.childNodes;
+    }
+	
 	public void addNode(String node_type) {
 		//adds the child to the nodes children list;
 		childNodes.add(new AST(node_type));
@@ -37,34 +44,40 @@ public class AST {
 	}
 	
 	public AST operatorSwitch(AST root, String value) {
-		
-		AST temp = root.childNodes.get(root.childNodes.size() - 1);
-		root.childNodes.get(root.childNodes.size() - 1).node_type = "Operator";
-		root.childNodes.get(root.childNodes.size() - 1).value = value;
-		root.childNodes.get(root.childNodes.size() - 1).childNodes.removeAll(childNodes);
-		root.childNodes.get(root.childNodes.size() - 1).childNodes.add(temp);
-		root.childNodes.get(root.childNodes.size() - 1).childNodes.get(0).parentNode = root;
+			
+		root.addNode("Operator", value);
+		root.childNodes.get(root.childNodes.size()-1).childNodes.add(root.childNodes.get(root.childNodes.size()-2));
+		root.childNodes.remove(root.childNodes.size()-2);
+		root.childNodes.get(root.childNodes.size()-1).childNodes.get(0).parentNode = root.childNodes.get(root.childNodes.size()-1);
 		return root.childNodes.get(root.childNodes.size() - 1);
+		
 		
 	}
 	
 	public AST expressionEscape(AST root) {
 		
-		
+		int count = 0;
 		
 		while(root.parentNode.node_type == "Operator") {
+			count++;
 			System.out.println(root.value);
 			root = root.parentNode;
 		}
 		
+		if(root.node_type == "Operator" && root.parentNode.node_type != "ForLoop") {
 		return root.parentNode;
+		}
+		else {
+			return root;
+		}
+		//return root.parentNode;
 	}
 	
 	
 	public void traverse(AST root, int tabs) {
 		
 		if(tabs == 7) {
-			System.exit(1);
+			//System.exit(1);
 		}
 		
 		AST temp;

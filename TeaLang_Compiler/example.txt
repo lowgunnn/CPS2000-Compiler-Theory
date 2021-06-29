@@ -1,7 +1,7 @@
 
 if(false){
 
-print 12;
+print 12+5+7;
 
 print 12;
 
@@ -11,7 +11,7 @@ let num : int = 23;
 
 print 12; }else
 {
-print 12;
+print num*7 < 5+5;
 
 print 12;
 
@@ -31,15 +31,15 @@ several
 lines */
 
 
+let num : int = 0+5;
 
-
-for(let num : int = 0; num + 5; num = 2+23+23*234 < 234 + 2 != 03 *7;){
+for(let num : int = 0; num < 5; num = 2+23+23*234;){
 
 while(5){
 }
 
 }
-
+/*
 nu = 5;
 sf_21_1dd = 2354;
 
@@ -57,4 +57,4 @@ print ( 23*5+5+(5+6+9*9+3*6+5*7+8));
 
 print (1*1);
 print nice( (12+4*(5+6)+6), 3 );
-
+*/
