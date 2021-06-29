@@ -636,9 +636,18 @@ public class Parser {
 			if (stack.peek() == "ActualParams") {
 				stack.pop();
 				stack.pop();
+				
+				if(stack.peek() != "Semi_Colon" ) {
+					root = root.parentNode;
+				}
+				
+				
 			} else {
 				stack.pop();
 			}
+			
+			
+			
 			break;
 
 		case 54:
@@ -650,6 +659,11 @@ public class Parser {
 			if (stack.peek() == "ActualParams") {
 				stack.pop();
 				stack.pop();
+				if(stack.peek() != "Semi_Colon" ) {
+					root = root.parentNode;
+				}
+				
+				
 			} else {
 				stack.pop();
 			}
@@ -662,6 +676,11 @@ public class Parser {
 			if (stack.peek() == "ActualParams") {
 				stack.pop();
 				stack.pop();
+				if(stack.peek() != "Semi_Colon" ) {
+					root = root.parentNode;
+				}
+				
+				
 			} else {
 				stack.pop();
 			}
