@@ -283,6 +283,7 @@ public class Parser {
 			if (next_token.type == "Equals") {
 				root.addNode("VariableAssignment");
 				root = root.switchRoot(root);
+				root.addNode("Variable_Identifier", current_token.value);
 				stack.push("Statement");
 				stack.push("Semi_Colon");
 				stack.push("Expression");
@@ -290,6 +291,8 @@ public class Parser {
 			} else {
 				// function call
 				root.addNode("FunctionCall");
+				root = root.switchRoot(root);
+				root.addNode("Variable_Identifier", current_token.value);
 				stack.push("Statement");
 				stack.push("Semi_Colon");
 				stack.push("Closing_Bracket");
@@ -300,13 +303,14 @@ public class Parser {
 		case 27:
 			root.addNode("VariableAssignment");
 			root = root.switchRoot(root);
+			root.addNode("Variable_Identifier", current_token.value);
 			stack.push("Semi_Colon");
 			stack.push("Expression");
 			stack.push("Equals");
 			break;
 
 		case 28:
-			//root = root.parentNode;
+			root = root.parentNode;
 			System.out.println("No more parameters!");
 			stack.pop(); // pops the closing bracket expected afterwards
 			System.out.println("POPPED");
@@ -553,7 +557,7 @@ public class Parser {
 			break;
 
 		case 48:
-			root.addNode("Literal", current_token.type);
+			root.addNode("Literal", current_token.value);
 			stack.push("ActualParams");
 			stack.push("SimpleExpression");
 			stack.push("RelationalOp");

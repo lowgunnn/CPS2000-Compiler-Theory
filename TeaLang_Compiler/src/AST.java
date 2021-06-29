@@ -64,7 +64,7 @@ public class AST {
 			root = root.parentNode;
 		}
 		
-		if(root.node_type == "Operator" && root.parentNode.node_type != "ForLoop") {
+		if(root.node_type == "Operator" && root.parentNode.node_type != "ForLoop" && root.parentNode.node_type != "FunctionCall") {
 		return root.parentNode;
 		}
 		else {
