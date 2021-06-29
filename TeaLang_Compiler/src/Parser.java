@@ -70,7 +70,7 @@ public class Parser {
 
 		case 1:
 			root.addNode("VariableDecl");
-			// root = root.switchRoot(root);
+			root = root.switchRoot(root);
 			// declaring variables
 			stack.push("Statement");
 			stack.push("Semi_Colon");
@@ -83,6 +83,7 @@ public class Parser {
 		case 2:
 			// print statements
 			root.addNode("PrintStatements");
+			root = root.switchRoot(root);
 			stack.push("Statement");
 			stack.push("Semi_Colon");
 			stack.push("Expression");
@@ -91,6 +92,7 @@ public class Parser {
 			// if statements
 			// no need to add statement terminal since block does it
 			root.addNode("IfStatements");
+			root = root.switchRoot(root);
 			stack.push("Block");
 			stack.push("Closing_Bracket");
 			stack.push("Expression");
@@ -99,7 +101,7 @@ public class Parser {
 		case 4:
 			// For Loop
 			root.addNode("ForLoop");
-			// root = root.switchRoot(root);
+			root = root.switchRoot(root);
 			System.out.println("Entered For-Loop");
 			stack.push("Block");
 			stack.push("Closing_Bracket");
@@ -112,6 +114,7 @@ public class Parser {
 		case 5:
 			// while loop
 			root.addNode("WhileLoop");
+			root = root.switchRoot(root);
 			System.out.println("Entered While Loop");
 			stack.push("Block");
 			stack.push("Closing_Bracket");
@@ -121,6 +124,7 @@ public class Parser {
 		case 6:
 			// returns
 			root.addNode("ReturnStatement");
+			root = root.switchRoot(root);
 			stack.push("Statement");
 			stack.push("Semi_Colon");
 			stack.push("Expression");
@@ -128,6 +132,7 @@ public class Parser {
 		case 7:
 			// Function Declarations
 			root.addNode("FunctionDecl");
+			root = root.switchRoot(root);
 			stack.push("Block");
 			stack.push("Closing_Bracket");
 			stack.push("Params");
@@ -145,7 +150,7 @@ public class Parser {
 					root.addNode("Block");
 				}
 			}
-			// root = root.switchRoot(root);
+			root = root.switchRoot(root);
 			System.out.println("ENTERED BLOCK");
 			stack.push("Statement");
 			stack.push("Closing_Curly");
@@ -155,7 +160,7 @@ public class Parser {
 		case 9:
 			// Parameters
 			root.addNode("FormalParams");
-			// root = root.switchRoot(root);
+			root = root.switchRoot(root);
 			root.addNode("Variable_Identifier", current_token.value);
 			stack.push("Params");
 			stack.push("Type");
@@ -177,8 +182,10 @@ public class Parser {
 			break;
 
 		case 12:
-			root.addNode("Variable_Identifier", current_token.value);
+			
 			if (next_token.type == "Opening_Bracket") {
+				root.addNode("FunctionCall", current_token.value);
+				root = root.switchRoot(root);
 				// function call
 				stack.push("SimpleExpression");
 				stack.push("RelationalOp");
@@ -190,6 +197,7 @@ public class Parser {
 				stack.push("ActualParams");
 				stack.push("Opening_Bracket");
 			} else {
+				root.addNode("Variable_Identifier", current_token.value);
 				stack.push("SimpleExpression");
 				stack.push("RelationalOp");
 				stack.push("Term");
@@ -213,7 +221,7 @@ public class Parser {
 
 		case 14:
 			root.addNode("Operator", current_token.value);
-			// root = root.switchRoot(root);
+			root = root.operatorSwitch(root, current_token.value);
 			stack.push("SimpleExpression");
 			stack.push("RelationalOp");
 			stack.push("Term");
@@ -225,7 +233,8 @@ public class Parser {
 		case 17:
 			// Multiplicative Op Encountered, or rather correct type of operator, so we re
 			// use the same case
-			root.addNode("Operator", current_token.value);
+		//	root.addNode("Operator", current_token.value);
+			root = root.operatorSwitch(root, current_token.value);
 			break;
 
 		// These cases may be numbered wrong because are either
@@ -236,12 +245,12 @@ public class Parser {
 
 			break;
 		case 22:
-			// root = root.parentNode;
+			root = root.parentNode;
 			if (root.node_type == "ForLoop" || root.node_type == "WhileLoop" || root.node_type == "FunctionDecl") {
-				// root = root.parentNode;
+				root = root.parentNode;
 			}
 			if (root.node_type == "IfStatement" && next_token.type != "Else_Keyowrd") {
-				// root = root.parentNode;
+				root = root.parentNode;
 			}
 			stack.pop(); // pops the closing curling bracket
 			System.out.println("EXITTED BLOCK~~~~~~~~~~~~~~~~~~~~~~~");
@@ -256,6 +265,7 @@ public class Parser {
 			// statement afterwards
 			// used for one-off declarations like in for loop variable declarations
 			root.addNode("VariableDecl");
+			root.switchRoot(root);
 			stack.push("Semi_Colon");
 			stack.push("Expression");
 			stack.push("Equals");
@@ -267,6 +277,7 @@ public class Parser {
 			// variable assignment -> onestament ma nax kif insejta din lol
 			if (next_token.type == "Equals") {
 				root.addNode("VariableAssignment");
+				root = root.switchRoot(root);
 				stack.push("Statement");
 				stack.push("Semi_Colon");
 				stack.push("Expression");
@@ -283,6 +294,7 @@ public class Parser {
 			break;
 		case 27:
 			root.addNode("VariableAssignment");
+			root = root.switchRoot(root);
 			stack.push("Semi_Colon");
 			stack.push("Expression");
 			stack.push("Equals");
@@ -306,9 +318,12 @@ public class Parser {
 
 			if (current_token.type != "Comma" && current_token.type != "Semi_Colon") {
 
-				root.addNode("Operator", current_token.value);
+			//	root.addNode("Operator", current_token.value);
+				root = root.operatorSwitch(root, current_token.value);
 			} else {
-				root.addNode("ExpressionEnded");
+				//root.addNode("ExpressionEnded");
+				
+				root = root.expressionEscape(root);
 				// while(root.parentNode.node_type != "Operator") {
 				// root = root.parentNode;
 				// }
@@ -327,9 +342,13 @@ public class Parser {
 		case 31:
 			// END THE EXPRESSION AT SECOND LOWEST RECURSION
 			if (current_token.type != "Comma" && current_token.type != "Semi_Colon") {
-				root.addNode("Operator", current_token.value);
+			//	root.addNode("Operator", current_token.value);
+				root = root.operatorSwitch(root, current_token.value);
 			} else {
-				root.addNode("ExpressionEnded");
+				//root.addNode("ExpressionEnded");
+				//System.exit(1);
+				
+				root = root.expressionEscape(root);
 
 				// while(root.parentNode.node_type != "Operator") {
 				// root = root.parentNode;
@@ -347,9 +366,14 @@ public class Parser {
 			// END THE EXPRESSION AT HIGHEST RECURSION
 
 			if (current_token.type != "Comma" && current_token.type != "Semi_Colon") {
-				root.addNode("Operator", current_token.value);
+				//System.out.println(root.node_type + root.parentNode.node_type);
+				//System.exit(1);
+			//	root.addNode("Operator", current_token.value);
+				root = root.operatorSwitch(root, current_token.value);
 			} else {
-				root.addNode("ExpressionEnded");
+				//root.addNode("ExpressionEnded");
+				
+				root = root.expressionEscape(root);
 				// while(root.parentNode.node_type != "Operator") {
 				// root = root.parentNode;
 				// }
@@ -358,8 +382,14 @@ public class Parser {
 			stack.pop(); // SIMPLE EXP
 			if (stack.peek() != "ActualParams")
 				stack.pop(); // FOLLOW CHAR -> ; ) ,
+			
+			
+			
+			
 			break;
 
+			
+			
 		case 33:
 			root.addNode("Literal", current_token.value);
 			stack.push("Factor");
@@ -390,7 +420,10 @@ public class Parser {
 			break;
 
 		case 36:
-			root.addNode("Operator", current_token.value);
+			
+			
+		//	root.addNode("Operator", current_token.value);
+			root = root.operatorSwitch(root, current_token.value);
 			stack.push("Factor");
 			stack.push("MultiplicativeOp");
 			stack.push("Expression");
@@ -403,8 +436,9 @@ public class Parser {
 			break;
 
 		case 38:
-			root.addNode("Variable_Identifier", current_token.value);
+			
 			if (next_token.type == "Opening_Bracket") {
+				root.addNode("FunctionCall", current_token.value);
 				// function call
 				stack.push("Term");
 				stack.push("AdditiveOp");
@@ -412,6 +446,7 @@ public class Parser {
 				stack.push("ActualParams");
 				stack.push("Opening_Bracket");
 			} else {
+				root.addNode("Variable_Identifier", current_token.value);
 				stack.push("Term");
 				stack.push("AdditiveOp");
 			}
@@ -426,7 +461,8 @@ public class Parser {
 			break;
 
 		case 40:
-			root.addNode("Operator", current_token.value);
+		//	root.addNode("Operator", current_token.value);
+			root = root.operatorSwitch(root, current_token.value);
 			stack.push("Term");
 			stack.push("AdditiveOp");
 			stack.push("Expression");
@@ -438,9 +474,10 @@ public class Parser {
 			break;
 
 		case 42:
-			root.addNode("Variable_Identifier", current_token.value);
+			
 			if (next_token.type == "Opening_Bracket") {
 				// function call
+				root.addNode("FunctionCall", current_token.value);
 				stack.push("SimpleExpression");
 				stack.push("RelationalOp");
 				stack.push("Term");
@@ -451,6 +488,7 @@ public class Parser {
 				stack.push("ActualParams");
 				stack.push("Opening_Bracket");
 			} else {
+				root.addNode("Variable_Identifier", current_token.value);
 				stack.push("SimpleExpression");
 				stack.push("RelationalOp");
 				stack.push("Term");
@@ -473,7 +511,8 @@ public class Parser {
 			break;
 
 		case 44:
-			root.addNode("Operator", current_token.value);
+			//root.addNode("Operator", current_token.value);
+			root = root.operatorSwitch(root, current_token.value);
 			stack.push("SimpleExpression");
 			stack.push("RelationalOp");
 			stack.push("Term");
@@ -484,20 +523,23 @@ public class Parser {
 			break;
 
 		case 45:
-			root.addNode("Operator", current_token.value);
+			//root.addNode("Operator", current_token.value);
+			root = root.operatorSwitch(root, current_token.value);
 			stack.push("AdditiveOp");
 			stack.push("Factor");
 			break;
 
 		case 46:
-			root.addNode("Operator", current_token.value);
+			//root.addNode("Operator", current_token.value);
+			root = root.operatorSwitch(root, current_token.value);
 			stack.push("RelationalOp");
 			stack.push("Term");
 			stack.push("AdditiveOp");
 			stack.push("Factor");
 			break;
 		case 47:
-			root.addNode("Operator", current_token.value);
+			//root.addNode("Operator", current_token.value);
+			root = root.operatorSwitch(root, current_token.value);
 			stack.push("RelationalOp");
 			stack.push("Term");
 			break;
@@ -514,9 +556,10 @@ public class Parser {
 			break;
 
 		case 49:
-			root.addNode("Variable_Identifier", current_token.value);
+			
 			if (next_token.type == "Opening_Bracket") {
 				// function call
+				root.addNode("FunctionCall", current_token.value);
 				stack.push("ActualParams");
 				stack.push("SimpleExpression");
 				stack.push("RelationalOp");
@@ -528,6 +571,7 @@ public class Parser {
 				stack.push("ActualParams");
 				stack.push("Opening_Bracket");
 			} else {
+				root.addNode("Variable_Identifier", current_token.value);
 				stack.push("ActualParams");
 				stack.push("SimpleExpression");
 				stack.push("RelationalOp");
@@ -552,7 +596,8 @@ public class Parser {
 			break;
 
 		case 51:
-			root.addNode("Operator", current_token.value);
+			//root.addNode("Operator", current_token.value);
+			root = root.operatorSwitch(root, current_token.value);
 			stack.push("ActualParams");
 			stack.push("SimpleExpression");
 			stack.push("RelationalOp");
@@ -563,12 +608,14 @@ public class Parser {
 			stack.push("Expression");
 			break;
 		case 52:
+			root = root.expressionEscape(root);
 			stack.push("ActualParams");
 			stack.push("Expression");
 			break;
 
 		case 53:
-			root.addNode("ExpressionEnded");
+			//root.addNode("ExpressionEnded");
+			root = root.expressionEscape(root);
 			stack.pop(); // FACTOR
 			stack.pop(); // ADDITIVE
 			stack.pop(); // TERM
@@ -583,7 +630,8 @@ public class Parser {
 			break;
 
 		case 54:
-			root.addNode("ExpressionEnded");
+			//root.addNode("ExpressionEnded");
+			root = root.expressionEscape(root);
 			stack.pop(); // TERM
 			stack.pop(); // RELATIONAL
 			stack.pop();
@@ -596,7 +644,8 @@ public class Parser {
 			break;
 
 		case 55:
-			root.addNode("ExpressionEnded");
+			//root.addNode("ExpressionEnded");
+			root = root.expressionEscape(root);
 			stack.pop();
 			if (stack.peek() == "ActualParams") {
 				stack.pop();
@@ -639,7 +688,7 @@ public class Parser {
 				next_token = lexedTokens.get(index + 1);
 			}
 
-			System.out.println(stack.peek() + current_token.type);
+			System.out.println(stack.peek() + " "+ current_token.type+ " ------------> "+current_token.value);
 			System.out.println("STACK: " + stack);
 
 			if (stack.peek() == "$") {
@@ -707,7 +756,11 @@ public class Parser {
 		}
 
 		System.out.println("~~~~~~~~~~~~AST~~~~~~~~~~~~~~~");
-
+		
+		while(root.parentNode != null) {
+			root = root.parentNode;
+		}
+		
 		for (AST nodes : root.childNodes) {
 
 			System.out.println(nodes.node_type);
@@ -721,6 +774,8 @@ public class Parser {
 			}
 
 		}
+		
+		root.traverse(root,0);
 		
 
 	}
