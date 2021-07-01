@@ -37,12 +37,25 @@ for(let nice:int = 0; nice < 5; nice = nice + 1;){
 
 print OverUnder50(x); //"Over Fifty"
 
+string function_too( age : int, nice : string) {
+	
+	let z:float = 45.0;
+		
+	nice = OverUnder50(x);	
+		
+	return "12";
+}
+
 string function( age : int, nice : string) {
 	
 	let z:float = 45.0;
 		
-	return x;
+	return function_too(x,y);
 }
 
-print 12;
+
+
+
+
+print x;
 

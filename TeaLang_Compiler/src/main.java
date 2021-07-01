@@ -13,15 +13,19 @@ public class main {
 		
 		ArrayList<Token> lexedTokens = new ArrayList<>();
 		
+		System.out.println("~~~~~~~~~~~~~~~~~~~~~LEXER~~~~~~~~~~~~~~~~~~~~~~~~~~");
+		
 		lexedTokens = lexer.readText("example.txt");
 		
 		AST root = parser.parseProgram(lexedTokens);
 		
-		
+		System.out.println("~~~~~~~~~~~~~~~~~~~~~XML~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		
 		XML_Visitor xml = new XML_Visitor();
 		
 		xml.traverse(root, 0);
+		
+		System.out.println("~~~~~~~~~~~~~~~~~~~~~SEMANTIC~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		
 		Stack<Map<String, String>> table = semantic.traverse(root);
 		
