@@ -143,6 +143,12 @@ public class Parser {
 			break;
 		case 8:
 			// block
+			if(next_token.type == "Opening_Curly" || next_token.type == "Closing_Curly") {
+				System.out.println("Syntax Error..... Redundant Block at line "+next_token.line_number);
+				System.exit(1);
+			}
+			
+			
 			if (root.childNodes.size() == 0) {
 
 				root.addNode("Block");
@@ -743,7 +749,7 @@ public class Parser {
 				if (last_terminal != current_token.type) {
 					// Report a syntax error
 					System.out.println("Syntax Error at Line " + current_token.line_number);
-					System.out.println("Expected " + last_terminal + ", at " + current_token.type);
+					System.out.println("Expected " + last_terminal + "in place of " + current_token.type);
 					System.exit(1);
 
 				}
@@ -769,7 +775,7 @@ public class Parser {
 
 				System.out.println(production_rule);
 				if (production_rule == 0) {
-					System.out.println("Syntax error at line " + current_token.line_number);
+					System.out.println("Syntax error, unexpected token at line " + current_token.line_number);
 					System.exit(1);
 				} else {
 

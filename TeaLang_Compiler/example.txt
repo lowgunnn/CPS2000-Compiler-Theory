@@ -40,9 +40,9 @@ print OverUnder50(x); //"Over Fifty"
 string function( age : int, nice : string) {
 	
 	let z:float = 45.0;
-	
-	if(true){
+		
 	return x;
-	}
 }
+
+print 12;
 
