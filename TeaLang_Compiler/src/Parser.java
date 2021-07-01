@@ -39,13 +39,13 @@ public class Parser {
 			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 11, 11, 11, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 					0 }, // literal
 			{ 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 11, 11, 11, 11, 11, 0, 14, 0, 0, 0, 0, 0, 0,
-					14, 0, 0 }, // expression
+					14, 0}, // expression
 			{ 0, 0, 0, 0, 0, 0, 0, 43, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 42, 41, 41, 41, 41, 41, 0, 44, 0, 0, 0, 0, 0, 0,
-					44, 0, 0 }, // simple expression
+					44, 0}, // simple expression
 			{ 0, 0, 0, 32, 0, 0, 0, 0, 55, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 46, 46, 46, 47, 17, 17, 47,
 					0, 32 }, // relationalOp
 			{ 0, 0, 0, 0, 0, 0, 0, 39, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 38, 37, 37, 37, 37, 37, 0, 40, 0, 0, 0, 0, 0, 0,
-					40, 0, 0 }, // Term
+					40, 0 }, // Term
 			{ 0, 0, 0, 31, 0, 0, 0, 0, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 45, 45, 45, 17, 32, 32, 17,
 					0, 31 }, // additiveOp
 			{ 0, 0, 0, 0, 0, 0, 0, 35, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 33, 33, 33, 33, 33, 0, 36, 0, 0, 0, 0, 0, 0,
@@ -317,7 +317,9 @@ public class Parser {
 			break;
 
 		case 28:
-			root = root.parentNode;
+			if(root.node_type == "FormalParams") {
+			root = root.parentNode;				//only leave if we have began inserting parameters
+			}
 			System.out.println("No more parameters!");
 			stack.pop(); // pops the closing bracket expected afterwards
 			System.out.println("POPPED");

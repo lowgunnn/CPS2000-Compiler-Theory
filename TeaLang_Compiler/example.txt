@@ -48,14 +48,25 @@ string function_too( age : int, nice : string) {
 
 string function( age : int, nice : string) {
 	
-	let z:float = 45.0;
+	
 		
 	return function_too(x,y);
 }
 
 
+int testReturnExpression(){
+
+	return 5+60;
+	
+}
+
+//let z:float = 5.0;
+//let z:bool = 450+4+6+5 < 7+9 * 7; does not work due to left-recursion when building the AST, leftmost operators take precedence, evaluates to int
+let z:bool = (450+4+6+5) < (7+9 * 7);  //however this way it works
+
 
 
 
 print x;
-
+x = x+1;
+x = x and 5;
