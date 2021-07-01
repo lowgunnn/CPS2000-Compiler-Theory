@@ -1,64 +1,48 @@
-
-if(false){
-
-print 12+5+7;
-
-print 12;
-
-print 12;
-
-let num : int = 23;
-
-print 12; }else
-{
-print num*7 < 5+5;
-
-print 12;
-
-print 12;
-
-print 12;
-
-
+string OverUnder50( age : int, nice : string) {
+	
+	let z:float = 45.0;
+	
+	if( age < 50){
+	let meme4:string = "No";
+	//return "Under Fifty";
+	}
+	else{
+	let meme99:string = "No";
+	return "Over Fifty";
+	
+	}
 }
 
+let x:int = 45;
+
+let y:string = "hello";
 
 
+while( x < 50 ){
+	let while_variable:string = "No";
+	print OverUnder50(x); //"Under Fifty" x5
+	x = x + 1;
+	}
+	
+	
+for(let nice:int = 0; nice < 5; nice = nice + 1;){
+	let meme:string = "No";
+	let meme2:string = "No";
+	let meme3:string = "No";
+	let meme4:string = "No";
+	
+	
 
-/* This is a comment
-on 
-several
-lines */
+}	
 
+print OverUnder50(x); //"Over Fifty"
 
-let num : int = 0+5;
-
-for(let num : int = 0; num < 5; num = 2+23+23*234;){
-
-while(5){
+string function( age : int, nice : string) {
+	
+	let z:float = 45.0;
+	
+	if(true){
+	return x;
+	}
 }
 
-}
-
-nu = 5;
-sf_21_1dd = 2354;
-
-print 12;
-
-int function(nigger : int , fresh : bool){
-print 12;
-}
-print 12*5*true;
-
-print 23*5+5+5+6+9*9+3*6+5*7+8 == 3+7 > 3 > 3 < 3*8 > 5 != 23*234+124;
-//hello
-print ( 23*5+5+(5+6+9*9+3*6+5*7+8));
-
-
-print (1*1);
-print nice( (12+4*(5+6)+6), 3 )+9;
-
-
-while(5>6){
-print 9;
-}

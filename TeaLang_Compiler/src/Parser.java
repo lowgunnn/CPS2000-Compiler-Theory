@@ -133,6 +133,7 @@ public class Parser {
 			// Function Declarations
 			root.addNode("FunctionDecl");
 			root = root.switchRoot(root);
+			root.addNode("Type", current_token.value);
 			stack.push("Block");
 			stack.push("Closing_Bracket");
 			stack.push("Params");
@@ -172,7 +173,7 @@ public class Parser {
 			break;
 
 		case 11:
-			root.addNode("Literal", current_token.value);
+			root.addNode(current_token.type, current_token.value);
 			stack.push("SimpleExpression");
 			stack.push("RelationalOp");
 			stack.push("Term");
@@ -403,7 +404,7 @@ public class Parser {
 			
 			
 		case 33:
-			root.addNode("Literal", current_token.value);
+			root.addNode(current_token.type, current_token.value);
 			stack.push("Factor");
 			stack.push("MultiplicativeOp");
 			break;
@@ -442,7 +443,7 @@ public class Parser {
 			break;
 
 		case 37:
-			root.addNode("Literal", current_token.value);
+			root.addNode(current_token.type, current_token.value);
 			stack.push("Term");
 			stack.push("AdditiveOp");
 			break;
@@ -480,7 +481,7 @@ public class Parser {
 			stack.push("Expression");
 			break;
 		case 41:
-			root.addNode("Literal", current_token.value);
+			root.addNode(current_token.type, current_token.value);
 			stack.push("SimpleExpression");
 			stack.push("RelationalOp");
 			break;
@@ -690,7 +691,7 @@ public class Parser {
 
 	}
 
-	public static void parseProgram(ArrayList<Token> lexedTokens) {
+	public static AST parseProgram(ArrayList<Token> lexedTokens) {
 
 		System.out.println("~~~~~~~~~~~~~~PARSER~~~~~~~~~~~~~~~~~~~~~~~");
 
@@ -785,28 +786,13 @@ public class Parser {
 		} else {
 			System.out.println("Succesfully Parsed");
 		}
-
-		System.out.println("~~~~~~~~~~~~AST~~~~~~~~~~~~~~~");
+		
 		
 		while(root.parentNode != null) {
 			root = root.parentNode;
 		}
-		
-		for (AST nodes : root.childNodes) {
-
-			System.out.println(nodes.node_type);
-
-			if (nodes.node_type == "Block" || nodes.node_type == "ElseBlock") {
-				System.out.println("~~~~~~~~~~~BLOCK~~~~~~~~~~~~~~~~~~~~~");
-				for (AST childs : nodes.childNodes) {
-					System.out.println(childs.node_type);
-				}
-				System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-			}
-
-		}
-		
-		root.traverse(root,0);
+		return root;
+	
 		
 
 	}

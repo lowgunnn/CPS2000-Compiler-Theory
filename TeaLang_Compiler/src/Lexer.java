@@ -24,8 +24,8 @@ public class Lexer {
 			{ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 14, 13, -1, 13, -1, -1, -1, -1, -1, -1, -1 },
 			{ 10, -1, -1, -1, -1, -1, -1, -1, -1, -1, 10, -1, 12, 13, -1, 13, -1, 17, 17, 17, -1, -1, -1 },
 			{ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 12, 13, -1, 13, -1, 17, 17, 17, -1, -1, -1 },
-			{ 22, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 }
-
+			{ 22, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
+			{ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 13, -1, -1, -1, -1, -1, -1, -1, -1, -1 }
 	};
 
 	public static int[] final_states = { 1, 3, 4, 5, 7, 8, 9, 10, 11, 14, 16, 20, 21, 22 };
@@ -105,6 +105,9 @@ public class Lexer {
 			
 			return transition_table[15][current_state];
 		}
+		else if(encountered_char == '\t') {
+			return transition_table[16][current_state];
+		}
 		// otherwise an unexpected character not in grammer, send 0 state
 		else {
 			return -1;
@@ -176,7 +179,9 @@ public class Lexer {
 							state = 0;
 							i--;
 						} else {
+							System.out.println(lexeme);
 							System.out.println("LEXICAL ERROR ENCOUNTERED AT LINE NUMBER: " + line_number);
+							System.exit(1);
 							break;
 						}
 
