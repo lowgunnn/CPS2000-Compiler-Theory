@@ -45,6 +45,23 @@ public class AST {
 
 	public AST operatorSwitch(AST root, String value) {
 
+		if( root.node_type == "Operator"){
+		if(value.equals("+") || value.equals("-") || value.equals("or")) {
+			
+			if(root.value.equals("*") || root.value.equals("/") || root.value.equals("and") ) {
+				root = root.parentNode;
+			}
+		}
+		
+		if(value.equals("==" )|| value.equals( "<" )|| value.equals(">" )|| value.equals("<=")
+				|| value.equals("<=" )|| value.equals( "!=") ) {
+			
+			if(root.value.equals("*") || root.value.equals("/") || root.value.equals("and") ||
+					value.equals("+") || value.equals("-") || value.equals("or")	) {
+				root = root.parentNode;
+			}
+		}
+		}
 		root.addNode("Operator", value);
 		root.childNodes.get(root.childNodes.size() - 1).childNodes.add(root.childNodes.get(root.childNodes.size() - 2));
 		root.childNodes.remove(root.childNodes.size() - 2);
@@ -72,6 +89,85 @@ public class AST {
 			return root;
 		}
 		// return root.parentNode;
+	}
+	
+	public AST orderOfOperations(AST root, String token) {
+		
+		
+		System.out.println("THE ROOT BEFORE ORDER OF OPERATIONS "+root.node_type+"  "+token);
+		
+		if (token.equals( "*" )|| token.equals("/") || token.equals("and")) {
+		
+		} else {
+			boolean rel;
+			if(token.equals("==" )|| token.equals( "<" )|| token.equals(">" )|| token.equals("<=")
+							|| token.equals("<=" )|| token.equals( "!=") ){
+				rel = true;
+			}else {
+				rel = false;
+			}
+			
+			System.out.println(root.node_type);
+			
+			if(!(root.parentNode.node_type.equals("Operator")) && (root.node_type.equals("Operator")) ){
+				
+				if(rel) {
+					if (!root.value.equals("==")&& !root.value.equals("<") && !root.value.equals(">") && !root.value.equals("<=")
+							&& !root.value.equals("<=") && !root.value.equals("!=")
+							) {
+						root = root.parentNode;
+						return root;
+					}
+				}
+			else {
+				if((!root.value.equals("==")&& !root.value.equals("<") && !root.value.equals(">") && !root.value.equals("<=")
+						&& !root.value.equals("<=") && !root.value.equals("!=")
+						&& !root.value.equals("+") && !root.value.equals("-")
+						&& !root.value.equals("or"))) {
+					root = root.parentNode;
+					return root;
+				}
+			}
+			}
+			while (root.parentNode.node_type.equals("Operator")) {
+				System.out.println("ORDER OF OPERATIONSORDER OF OPERATIONSORDER OF OPERATIONSORDER OF OPERATIONSORDER OF OPERATIONSORDER OF OPERATIONSORDER OF OPERATIONSORDER OF OPERATIONS");
+				if(rel) {
+					System.out.println("RELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELREL");
+					if (!root.value.equals("==")&& !root.value.equals("<") && !root.value.equals(">") && !root.value.equals("<=")
+							&& !root.value.equals("<=") && !root.value.equals("!=")
+							) {
+						root = root.parentNode;
+					} else {
+						if (!root.value.equals("==")&& !root.value.equals("<") && !root.value.equals(">") && !root.value.equals("<=")
+								&& !root.value.equals("<=") && !root.value.equals("!=") ) {
+							root = root.parentNode;
+						}
+						break;
+					}
+				root = root.parentNode;
+				}
+				else {
+				if (!root.value.equals("==")&& !root.value.equals("<") && !root.value.equals(">") && !root.value.equals("<=")
+						&& !root.value.equals("<=") && !root.value.equals("!=")
+						&& !root.parentNode.value.equals("+") && !root.parentNode.value.equals("-")
+						&& !root.parentNode.value.equals("or")) {
+					root = root.parentNode;
+				} else {
+					if( !root.value.equals("==")&& !root.value.equals("<") && !root.value.equals(">") && !root.value.equals("<=")
+					&& !root.value.equals("<=") && !root.value.equals("!=")
+					&& !root.parentNode.value.equals("+") && !root.parentNode.value.equals("-")
+					&& !root.parentNode.value.equals("or")) {
+						root = root.parentNode;
+					}
+					break;
+				}
+
+			}
+			}
+		}
+		
+		System.out.println("THE ROOT BEFORE ORDER OF OPERATIONS "+root.value);
+		return root;
 	}
 
 }

@@ -37,7 +37,7 @@ public class Token {
 			//These are the "strings" so we must include reserved key words aswell
 			switch(lexeme) {
 				
-			case "let":
+			case "let": 
 				return "Variable_Assigner";
 			case "print":
 				return "Print_Keyword";

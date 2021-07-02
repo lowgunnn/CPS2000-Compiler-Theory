@@ -83,4 +83,8 @@ let boolean:bool = not not not not true and not false;
 
 //function_too( false or true ,"hello");  //testing function call expression evaluations
 
-function_too( 5+9*7/5 ,"hello");
+function_too( 6*9*9+7/5 ,"hello");
+
+print 5+6+9 < 3;
+
+print 5+6 < 5;

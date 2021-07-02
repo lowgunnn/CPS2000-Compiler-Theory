@@ -39,9 +39,9 @@ public class Parser {
 			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 11, 11, 11, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 					0 }, // literal
 			{ 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 11, 11, 11, 11, 11, 14, 0, 0, 0, 0, 0, 0, 14,
-					0, 0}, // expression
+					0, 0 }, // expression
 			{ 0, 0, 0, 0, 0, 0, 0, 43, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 42, 41, 41, 41, 41, 41, 44, 0, 0, 0, 0, 0, 0, 44,
-					0, 0}, // simple expression
+					0, 0 }, // simple expression
 			{ 0, 0, 0, 32, 0, 0, 0, 0, 55, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 46, 46, 46, 47, 17, 17, 47,
 					0, 32 }, // relationalOp
 			{ 0, 0, 0, 0, 0, 0, 0, 39, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 38, 37, 37, 37, 37, 37, 40, 0, 0, 0, 0, 0, 0, 40,
@@ -49,7 +49,7 @@ public class Parser {
 			{ 0, 0, 0, 31, 0, 0, 0, 0, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 45, 45, 45, 17, 32, 32, 17,
 					0, 31 }, // additiveOp
 			{ 0, 0, 0, 0, 0, 0, 0, 35, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 33, 33, 33, 33, 33, 36, 0, 0, 0, 0, 0, 0, 36,
-					0, 0}, // Factor
+					0, 0 }, // Factor
 			{ 0, 0, 0, 30, 0, 0, 0, 0, 53, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17, 17, 17, 32, 31, 31, 32,
 					0, 30 }, // MultipilicatievOp
 			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // Returns
@@ -64,7 +64,9 @@ public class Parser {
 	};
 
 	public static void parseSyntax(int production_rule, Token current_token, Token next_token) {
-
+		
+		boolean op_type;
+		
 		// based on the production rule, the contents of the stack are adjusted
 		switch (production_rule) {
 
@@ -143,12 +145,11 @@ public class Parser {
 			break;
 		case 8:
 			// block
-			if(next_token.type == "Opening_Curly" || next_token.type == "Closing_Curly") {
-				System.out.println("Syntax Error..... Redundant Block at line "+next_token.line_number);
+			if (next_token.type == "Opening_Curly" || next_token.type == "Closing_Curly") {
+				System.out.println("Syntax Error..... Redundant Block at line " + next_token.line_number);
 				System.exit(1);
 			}
-			
-			
+
 			if (root.childNodes.size() == 0) {
 
 				root.addNode("Block");
@@ -189,7 +190,7 @@ public class Parser {
 			break;
 
 		case 12:
-			
+
 			if (next_token.type == "Opening_Bracket") {
 				root.addNode("FunctionCall", current_token.value);
 				root = root.switchRoot(root);
@@ -229,18 +230,21 @@ public class Parser {
 		case 14:
 			root.addNode("Operator", current_token.value);
 			root = root.switchRoot(root);
-			/*stack.push("SimpleExpression");
-			stack.push("RelationalOp");
-			stack.push("Term");
-			stack.push("AdditiveOp");
-			stack.push("Factor");
-			stack.push("MultiplicativeOp");*/
+			/*
+			 * stack.push("SimpleExpression"); stack.push("RelationalOp");
+			 * stack.push("Term"); stack.push("AdditiveOp"); stack.push("Factor");
+			 * stack.push("MultiplicativeOp");
+			 */
 			stack.push("Expression");
 			break;
 		case 17:
 			// Multiplicative Op Encountered, or rather correct type of operator, so we re
 			// use the same case
-		//	root.addNode("Operator", current_token.value);
+			// root.addNode("Operator", current_token.value);
+			
+			root = root.orderOfOperations(root, current_token.value);
+
+			
 			root = root.operatorSwitch(root, current_token.value);
 			break;
 
@@ -252,17 +256,17 @@ public class Parser {
 
 			break;
 		case 22:
-			if(root.node_type == "ElseBlock") {
+			if (root.node_type == "ElseBlock") {
 				root = root.parentNode;
 				root = root.parentNode;
-			}else {
-			root = root.parentNode;
-			if (root.node_type == "ForLoop" || root.node_type == "WhileLoop" || root.node_type == "FunctionDecl") {
+			} else {
 				root = root.parentNode;
-			}
-			if (root.node_type == "IfStatement" && next_token.type != "Else_Keyowrd") {
-				root = root.parentNode;
-			}
+				if (root.node_type == "ForLoop" || root.node_type == "WhileLoop" || root.node_type == "FunctionDecl") {
+					root = root.parentNode;
+				}
+				if (root.node_type == "IfStatement" && next_token.type != "Else_Keyowrd") {
+					root = root.parentNode;
+				}
 			}
 			stack.pop(); // pops the closing curling bracket
 			System.out.println("EXITTED BLOCK~~~~~~~~~~~~~~~~~~~~~~~");
@@ -297,10 +301,10 @@ public class Parser {
 				stack.push("Equals");
 			} else {
 				// function call
-				
+
 				root.addNode("FunctionCall");
 				root = root.switchRoot(root);
-				
+
 				root.addNode("Variable_Identifier", current_token.value);
 				stack.push("Statement");
 				stack.push("Semi_Colon");
@@ -319,8 +323,8 @@ public class Parser {
 			break;
 
 		case 28:
-			if(root.node_type == "FormalParams") {
-			root = root.parentNode;				//only leave if we have began inserting parameters
+			if (root.node_type == "FormalParams") {
+				root = root.parentNode; // only leave if we have began inserting parameters
 			}
 			System.out.println("No more parameters!");
 			stack.pop(); // pops the closing bracket expected afterwards
@@ -335,19 +339,19 @@ public class Parser {
 			break;
 		case 30:
 			// END THE EXPRESSION AT LOWEST RECURSION
-			
+
 			if (current_token.type != "Comma" && current_token.type != "Semi_Colon") {
 
-			//	root.addNode("Operator", current_token.value);
+				// root.addNode("Operator", current_token.value);
 				root = root.operatorSwitch(root, current_token.value);
-				
+
 			} else {
-				//root.addNode("ExpressionEnded");
-				
+				// root.addNode("ExpressionEnded");
+
 				root = root.expressionEscape(root);
-				
-				if(root.node_type != "FunctionCall") {
-				root = root.parentNode;
+
+				if (root.node_type != "FunctionCall") {
+					root = root.parentNode;
 				}
 				// while(root.parentNode.node_type != "Operator") {
 				// root = root.parentNode;
@@ -367,16 +371,20 @@ public class Parser {
 		case 31:
 			// END THE EXPRESSION AT SECOND LOWEST RECURSION
 			if (current_token.type != "Comma" && current_token.type != "Semi_Colon") {
-			//	root.addNode("Operator", current_token.value);
+				// root.addNode("Operator", current_token.value);
+
+				root = root.orderOfOperations(root, current_token.value);
+
 				root = root.operatorSwitch(root, current_token.value);
+
 			} else {
-				//root.addNode("ExpressionEnded");
-				//System.exit(1);
-				
+				// root.addNode("ExpressionEnded");
+				// System.exit(1);
+
 				root = root.expressionEscape(root);
-				if(root.node_type != "FunctionCall") {
+				if (root.node_type != "FunctionCall") {
 					root = root.parentNode;
-					}
+				}
 
 				// while(root.parentNode.node_type != "Operator") {
 				// root = root.parentNode;
@@ -394,17 +402,19 @@ public class Parser {
 			// END THE EXPRESSION AT HIGHEST RECURSION
 
 			if (current_token.type != "Comma" && current_token.type != "Semi_Colon") {
-				//System.out.println(root.node_type + root.parentNode.node_type);
-				//System.exit(1);
-			//	root.addNode("Operator", current_token.value);
+				// System.out.println(root.node_type + root.parentNode.node_type);
+				// System.exit(1);
+				// root.addNode("Operator", current_token.value);
+
+				root = root.orderOfOperations(root, current_token.value);
 				root = root.operatorSwitch(root, current_token.value);
 			} else {
-				//root.addNode("ExpressionEnded");
-				
+				// root.addNode("ExpressionEnded");
+
 				root = root.expressionEscape(root);
-				if(root.node_type != "FunctionCall") {
+				if (root.node_type != "FunctionCall") {
 					root = root.parentNode;
-					}
+				}
 				// while(root.parentNode.node_type != "Operator") {
 				// root = root.parentNode;
 				// }
@@ -413,14 +423,9 @@ public class Parser {
 			stack.pop(); // SIMPLE EXP
 			if (stack.peek() != "ActualParams")
 				stack.pop(); // FOLLOW CHAR -> ; ) ,
-			
-			
-			
-			
+
 			break;
 
-			
-			
 		case 33:
 			root.addNode(current_token.type, current_token.value);
 			stack.push("Factor");
@@ -451,13 +456,12 @@ public class Parser {
 			break;
 
 		case 36:
-			
-			
+
 			root.addNode("Operator", current_token.value);
 			root = root.switchRoot(root);
 			stack.push("Factor");
-			//stack.push("MultiplicativeOp");
-			//stack.push("Expression");
+			// stack.push("MultiplicativeOp");
+			// stack.push("Expression");
 			break;
 
 		case 37:
@@ -467,7 +471,7 @@ public class Parser {
 			break;
 
 		case 38:
-			
+
 			if (next_token.type == "Opening_Bracket") {
 				root.addNode("FunctionCall", current_token.value);
 				// function call
@@ -492,11 +496,11 @@ public class Parser {
 			break;
 
 		case 40:
-		    root.addNode("Operator", current_token.value);
+			root.addNode("Operator", current_token.value);
 			root = root.switchRoot(root);
 			stack.push("Term");
-			//stack.push("AdditiveOp");
-			//stack.push("Expression");
+			// stack.push("AdditiveOp");
+			// stack.push("Expression");
 			break;
 		case 41:
 			root.addNode(current_token.type, current_token.value);
@@ -505,7 +509,7 @@ public class Parser {
 			break;
 
 		case 42:
-			
+
 			if (next_token.type == "Opening_Bracket") {
 				// function call
 				root.addNode("FunctionCall", current_token.value);
@@ -542,26 +546,30 @@ public class Parser {
 			break;
 
 		case 44:
-			//root.addNode("Operator", current_token.value);
+			// root.addNode("Operator", current_token.value);
 			root = root.switchRoot(root);
 			stack.push("SimpleExpression");
-			/*stack.push("RelationalOp");
-			stack.push("Term");
-			stack.push("AdditiveOp");
-			stack.push("Factor");
-			stack.push("MultiplicativeOp");
-			stack.push("Expression");*/
+			/*
+			 * stack.push("RelationalOp"); stack.push("Term"); stack.push("AdditiveOp");
+			 * stack.push("Factor"); stack.push("MultiplicativeOp");
+			 * stack.push("Expression");
+			 */
 			break;
 
 		case 45:
-			//root.addNode("Operator", current_token.value);
+			// root.addNode("Operator", current_token.value);
+
+			root = root.orderOfOperations(root, current_token.value);
+
 			root = root.operatorSwitch(root, current_token.value);
 			stack.push("AdditiveOp");
 			stack.push("Factor");
 			break;
 
 		case 46:
-			//root.addNode("Operator", current_token.value);
+			// root.addNode("Operator", current_token.value);
+			root = root.orderOfOperations(root, current_token.value);
+
 			root = root.operatorSwitch(root, current_token.value);
 			stack.push("RelationalOp");
 			stack.push("Term");
@@ -569,14 +577,15 @@ public class Parser {
 			stack.push("Factor");
 			break;
 		case 47:
-			//root.addNode("Operator", current_token.value);
+			// root.addNode("Operator", current_token.value);
+			root = root.orderOfOperations(root, current_token.value);
 			root = root.operatorSwitch(root, current_token.value);
 			stack.push("RelationalOp");
 			stack.push("Term");
 			break;
 
 		case 48:
-			
+
 			root.addNode(current_token.type, current_token.value);
 			stack.push("ActualParams");
 			stack.push("SimpleExpression");
@@ -588,7 +597,7 @@ public class Parser {
 			break;
 
 		case 49:
-			
+
 			if (next_token.type == "Opening_Bracket") {
 				// function call
 				root.addNode("FunctionCall", current_token.value);
@@ -628,7 +637,7 @@ public class Parser {
 			break;
 
 		case 51:
-			//root.addNode("Operator", current_token.value);
+			// root.addNode("Operator", current_token.value);
 			root = root.operatorSwitch(root, current_token.value);
 			stack.push("ActualParams");
 			stack.push("SimpleExpression");
@@ -646,8 +655,8 @@ public class Parser {
 			break;
 
 		case 53:
-			//root.addNode("ExpressionEnded");
-			
+			// root.addNode("ExpressionEnded");
+
 			root = root.expressionEscape(root);
 			stack.pop(); // FACTOR
 			stack.pop(); // ADDITIVE
@@ -657,22 +666,19 @@ public class Parser {
 			if (stack.peek() == "ActualParams") {
 				stack.pop();
 				stack.pop();
-				
-				if(stack.peek() != "Semi_Colon" ) {
+
+				if (stack.peek() != "Semi_Colon") {
 					root = root.parentNode;
 				}
-				
-				
+
 			} else {
 				stack.pop();
 			}
-			
-			
-			
+
 			break;
 
 		case 54:
-			//root.addNode("ExpressionEnded");
+			// root.addNode("ExpressionEnded");
 			root = root.expressionEscape(root);
 			stack.pop(); // TERM
 			stack.pop(); // RELATIONAL
@@ -680,28 +686,26 @@ public class Parser {
 			if (stack.peek() == "ActualParams") {
 				stack.pop();
 				stack.pop();
-				if(stack.peek() != "Semi_Colon" ) {
+				if (stack.peek() != "Semi_Colon") {
 					root = root.parentNode;
 				}
-				
-				
+
 			} else {
 				stack.pop();
 			}
 			break;
 
 		case 55:
-			//root.addNode("ExpressionEnded");
+			// root.addNode("ExpressionEnded");
 			root = root.expressionEscape(root);
 			stack.pop();
 			if (stack.peek() == "ActualParams") {
 				stack.pop();
 				stack.pop();
-				if(stack.peek() != "Semi_Colon" ) {
+				if (stack.peek() != "Semi_Colon") {
 					root = root.parentNode;
 				}
-				
-				
+
 			} else {
 				stack.pop();
 			}
@@ -712,7 +716,6 @@ public class Parser {
 	}
 
 	public static AST parseProgram(ArrayList<Token> lexedTokens) {
-
 
 		stack.push("$");
 		stack.push("Program");
@@ -739,7 +742,7 @@ public class Parser {
 				next_token = lexedTokens.get(index + 1);
 			}
 
-			System.out.println(stack.peek() + " "+ current_token.type+ " ------------> "+current_token.value);
+			System.out.println(stack.peek() + " " + current_token.type + " ------------> " + current_token.value);
 			System.out.println("STACK: " + stack);
 
 			if (stack.peek() == "$") {
@@ -768,7 +771,7 @@ public class Parser {
 				}
 
 				if (last_terminal == "Variable_Identifier") {
-					
+
 					root.addNode(current_token.type, current_token.value);
 
 				}
@@ -806,14 +809,11 @@ public class Parser {
 		} else {
 			System.out.println("Succesfully Parsed");
 		}
-		
-		
-		while(root.parentNode != null) {
+
+		while (root.parentNode != null) {
 			root = root.parentNode;
 		}
 		return root;
-	
-		
 
 	}
 
