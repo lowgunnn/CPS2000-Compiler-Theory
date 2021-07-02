@@ -57,13 +57,14 @@ public class AST {
 	public AST expressionEscape(AST root) {
 
 		int count = 0;
-
+		
+		
 		while (root.parentNode.node_type == "Operator") {
 			count++;
 			System.out.println(root.value);
 			root = root.parentNode;
 		}
-
+		
 		if (root.node_type == "Operator" && root.parentNode.node_type != "ForLoop"
 				&& root.parentNode.node_type != "FunctionCall") {
 			return root.parentNode;

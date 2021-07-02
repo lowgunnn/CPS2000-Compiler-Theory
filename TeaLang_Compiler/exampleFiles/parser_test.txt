@@ -45,7 +45,7 @@ sf_21_1dd = 2354;
 
 print 12;
 
-int function(nigger : int , fresh : bool){
+int function(number : int , fresh : bool){
 print 12;
 }
 print 12*5*true;

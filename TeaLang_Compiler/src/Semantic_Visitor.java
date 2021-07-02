@@ -49,7 +49,16 @@ public class Semantic_Visitor {
 				} else if (temp.node_type == "ForLoop" || temp.node_type == "WhileLoop"
 						|| temp.node_type == "IfStatements" || temp.node_type == "ElseBlock"
 						|| temp.node_type == "Block") {
-
+					
+					
+					if(temp.node_type == "WhileLoop"|| temp.node_type == "IfStatements") {
+						
+						typeCheck(temp.childNodes.get(0), "bool");
+						//check that the condition evalutes to a bool type
+					}
+					
+					
+					
 					this.traverse(temp);
 					symbol_table.pop();
 
@@ -170,6 +179,36 @@ public class Semantic_Visitor {
 						
 					}
 
+				} else if(temp.node_type == "PrintStatement") {
+					
+					
+					
+				} else if(temp.node_type == "FunctionCall") {
+					
+					
+					if(!checkVariable(temp.childNodes.get(0).value)) {
+						System.out.println("Function with name "+temp.childNodes.get(0).value+" has not been declared yet.");
+						System.exit(1);
+					}
+					
+					for(int z = 1; z <temp.childNodes.size(); z++) {
+						
+						switch(temp.childNodes.get(z).node_type) {
+						
+						case "Variable_Identifier":
+						case "FunctionCall":
+							if(!checkVariable(temp.childNodes.get(z).value)) {
+								System.out.println(temp.childNodes.get(z).value+" has not been declared yet.");
+							}
+						
+						}
+						
+					}
+				}
+				
+				else if(temp.parentNode.node_type == "ForLoop"){
+					
+					typeCheck(temp, "bool");
 				}
 
 			}
@@ -299,6 +338,7 @@ public class Semantic_Visitor {
 			// is an operator so we must evaluate the expression and climb da tree
 			String evaluated_type = expressionOperationTraversal(node);
 			if(!expected_type.equals(evaluated_type)) {
+				System.out.println();
 				System.out.println("Expected " + expected_type + " value, instead of "+evaluated_type+" expression");
 				System.exit(1);
 			}
@@ -338,7 +378,7 @@ public class Semantic_Visitor {
 			String type1 = expressionOperationTraversal(node.childNodes.get(0));
 			String type2 = expressionOperationTraversal(node.childNodes.get(1));
 			
-			if(type1.equals("bool") && !type2.equals("bool")) {
+			/*if(type1.equals("bool") && !type2.equals("bool")) {
 				String resultant_type = checkOperatorConstraint(node, type2);
 				return resultant_type;
 			}
@@ -347,7 +387,7 @@ public class Semantic_Visitor {
 				return resultant_type;
 			}
 			
-			else if (!type1.equals(type2)) {
+			else */if (!type1.equals(type2)) {
 				System.out.println(node.childNodes.get(0).value + " "+node.childNodes.get(1).value);
 				System.out.println(type1+" "+type2);
 				System.out.println("Semantic Error Mismatched types");
@@ -362,6 +402,7 @@ public class Semantic_Visitor {
 
 		} else if(node.childNodes.size() == 1) {
 			String type = expressionOperationTraversal(node.childNodes.get(0));
+			
 			return type;
 		}
 
@@ -386,9 +427,21 @@ public class Semantic_Visitor {
 			}
 			break;
 		case "int":
-		case "float":
 			if(operator_node.value.equals("+") || operator_node.value.equals("-") || operator_node.value.equals("*") || operator_node.value.equals("/")  ) {
 				return "int";
+			}
+			else if(operator_node.value.equals("<") || operator_node.value.equals(">") || operator_node.value.equals("<=") || operator_node.value.equals(">=") ||
+					operator_node.value.equals("==") || operator_node.value.equals("!=")){
+				return "bool";
+			}
+			else {
+				System.out.println("Semantic Error " + operator_node.value + " operation not defined for numbers!");
+				System.exit(1);
+			}
+			break;
+		case "float":
+			if(operator_node.value.equals("+") || operator_node.value.equals("-") || operator_node.value.equals("*") || operator_node.value.equals("/")  ) {
+				return "float";
 			}
 			else if(operator_node.value.equals("<") || operator_node.value.equals(">") || operator_node.value.equals("<=") || operator_node.value.equals(">=") ||
 					operator_node.value.equals("==") || operator_node.value.equals("!=")){

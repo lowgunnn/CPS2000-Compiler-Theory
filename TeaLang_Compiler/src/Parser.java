@@ -38,18 +38,18 @@ public class Parser {
 					0 }, // type
 			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 11, 11, 11, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 					0 }, // literal
-			{ 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 11, 11, 11, 11, 11, 0, 14, 0, 0, 0, 0, 0, 0,
-					14, 0}, // expression
-			{ 0, 0, 0, 0, 0, 0, 0, 43, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 42, 41, 41, 41, 41, 41, 0, 44, 0, 0, 0, 0, 0, 0,
-					44, 0}, // simple expression
+			{ 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 11, 11, 11, 11, 11, 14, 0, 0, 0, 0, 0, 0, 14,
+					0, 0}, // expression
+			{ 0, 0, 0, 0, 0, 0, 0, 43, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 42, 41, 41, 41, 41, 41, 44, 0, 0, 0, 0, 0, 0, 44,
+					0, 0}, // simple expression
 			{ 0, 0, 0, 32, 0, 0, 0, 0, 55, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 46, 46, 46, 47, 17, 17, 47,
 					0, 32 }, // relationalOp
-			{ 0, 0, 0, 0, 0, 0, 0, 39, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 38, 37, 37, 37, 37, 37, 0, 40, 0, 0, 0, 0, 0, 0,
-					40, 0 }, // Term
+			{ 0, 0, 0, 0, 0, 0, 0, 39, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 38, 37, 37, 37, 37, 37, 40, 0, 0, 0, 0, 0, 0, 40,
+					0, 0 }, // Term
 			{ 0, 0, 0, 31, 0, 0, 0, 0, 54, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 45, 45, 45, 17, 32, 32, 17,
 					0, 31 }, // additiveOp
-			{ 0, 0, 0, 0, 0, 0, 0, 35, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 33, 33, 33, 33, 33, 0, 36, 0, 0, 0, 0, 0, 0,
-					36, 0, 0 }, // Factor
+			{ 0, 0, 0, 0, 0, 0, 0, 35, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 33, 33, 33, 33, 33, 36, 0, 0, 0, 0, 0, 0, 36,
+					0, 0}, // Factor
 			{ 0, 0, 0, 30, 0, 0, 0, 0, 53, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17, 17, 17, 32, 31, 31, 32,
 					0, 30 }, // MultipilicatievOp
 			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // Returns
@@ -228,13 +228,13 @@ public class Parser {
 
 		case 14:
 			root.addNode("Operator", current_token.value);
-			root = root.operatorSwitch(root, current_token.value);
-			stack.push("SimpleExpression");
+			root = root.switchRoot(root);
+			/*stack.push("SimpleExpression");
 			stack.push("RelationalOp");
 			stack.push("Term");
 			stack.push("AdditiveOp");
 			stack.push("Factor");
-			stack.push("MultiplicativeOp");
+			stack.push("MultiplicativeOp");*/
 			stack.push("Expression");
 			break;
 		case 17:
@@ -297,8 +297,10 @@ public class Parser {
 				stack.push("Equals");
 			} else {
 				// function call
+				
 				root.addNode("FunctionCall");
 				root = root.switchRoot(root);
+				
 				root.addNode("Variable_Identifier", current_token.value);
 				stack.push("Statement");
 				stack.push("Semi_Colon");
@@ -333,16 +335,20 @@ public class Parser {
 			break;
 		case 30:
 			// END THE EXPRESSION AT LOWEST RECURSION
-
+			
 			if (current_token.type != "Comma" && current_token.type != "Semi_Colon") {
 
 			//	root.addNode("Operator", current_token.value);
 				root = root.operatorSwitch(root, current_token.value);
+				
 			} else {
 				//root.addNode("ExpressionEnded");
 				
 				root = root.expressionEscape(root);
+				
+				if(root.node_type != "FunctionCall") {
 				root = root.parentNode;
+				}
 				// while(root.parentNode.node_type != "Operator") {
 				// root = root.parentNode;
 				// }
@@ -368,7 +374,9 @@ public class Parser {
 				//System.exit(1);
 				
 				root = root.expressionEscape(root);
-				root = root.parentNode;
+				if(root.node_type != "FunctionCall") {
+					root = root.parentNode;
+					}
 
 				// while(root.parentNode.node_type != "Operator") {
 				// root = root.parentNode;
@@ -394,7 +402,9 @@ public class Parser {
 				//root.addNode("ExpressionEnded");
 				
 				root = root.expressionEscape(root);
-				root=root.parentNode;
+				if(root.node_type != "FunctionCall") {
+					root = root.parentNode;
+					}
 				// while(root.parentNode.node_type != "Operator") {
 				// root = root.parentNode;
 				// }
@@ -443,11 +453,11 @@ public class Parser {
 		case 36:
 			
 			
-		//	root.addNode("Operator", current_token.value);
-			root = root.operatorSwitch(root, current_token.value);
+			root.addNode("Operator", current_token.value);
+			root = root.switchRoot(root);
 			stack.push("Factor");
-			stack.push("MultiplicativeOp");
-			stack.push("Expression");
+			//stack.push("MultiplicativeOp");
+			//stack.push("Expression");
 			break;
 
 		case 37:
@@ -482,11 +492,11 @@ public class Parser {
 			break;
 
 		case 40:
-		//	root.addNode("Operator", current_token.value);
-			root = root.operatorSwitch(root, current_token.value);
+		    root.addNode("Operator", current_token.value);
+			root = root.switchRoot(root);
 			stack.push("Term");
-			stack.push("AdditiveOp");
-			stack.push("Expression");
+			//stack.push("AdditiveOp");
+			//stack.push("Expression");
 			break;
 		case 41:
 			root.addNode(current_token.type, current_token.value);
@@ -533,14 +543,14 @@ public class Parser {
 
 		case 44:
 			//root.addNode("Operator", current_token.value);
-			root = root.operatorSwitch(root, current_token.value);
+			root = root.switchRoot(root);
 			stack.push("SimpleExpression");
-			stack.push("RelationalOp");
+			/*stack.push("RelationalOp");
 			stack.push("Term");
 			stack.push("AdditiveOp");
 			stack.push("Factor");
 			stack.push("MultiplicativeOp");
-			stack.push("Expression");
+			stack.push("Expression");*/
 			break;
 
 		case 45:
@@ -566,6 +576,7 @@ public class Parser {
 			break;
 
 		case 48:
+			
 			root.addNode("Literal", current_token.value);
 			stack.push("ActualParams");
 			stack.push("SimpleExpression");
@@ -636,6 +647,7 @@ public class Parser {
 
 		case 53:
 			//root.addNode("ExpressionEnded");
+			
 			root = root.expressionEscape(root);
 			stack.pop(); // FACTOR
 			stack.pop(); // ADDITIVE
@@ -791,6 +803,7 @@ public class Parser {
 
 		if (stack.peek() != "$") {
 			System.out.println("Syntax Error at EOF!");
+			System.exit(1);
 		} else {
 			System.out.println("Succesfully Parsed");
 		}

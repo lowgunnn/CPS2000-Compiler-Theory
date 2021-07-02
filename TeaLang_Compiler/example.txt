@@ -17,6 +17,12 @@ let x:int = 45;
 
 let y:string = "hello";
 
+let m:float = 7.9 + - - - - -5.0 + -8.9;   //the entire - list, acts upon the entire rhs expression (5.0 + - 8.9) , therefore sub-expressions need to be used for more specific grouping
+m = 7.9 + (- - - - -5.0) + - 8.9;     //such like this would ensure only the 5.0 would be affected
+
+
+
+
 
 while( x < 50 ){
 	let while_variable:string = "No";
@@ -69,4 +75,10 @@ let z:bool = (450+4+6+5) < (7+9 * 7);  //however this way it works
 
 print x;
 x = x+1;
-x = x and 5;
+//x = x and 5;
+
+
+let boolean:bool = not not not not true and not false;
+
+
+function_too( ming() ,"hello");
