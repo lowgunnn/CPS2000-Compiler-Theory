@@ -109,56 +109,29 @@ public class AST {
 			
 			System.out.println(root.node_type);
 			
-			if(!(root.parentNode.node_type.equals("Operator")) && (root.node_type.equals("Operator")) ){
-				
-				if(rel) {
-					if (!root.value.equals("==")&& !root.value.equals("<") && !root.value.equals(">") && !root.value.equals("<=")
-							&& !root.value.equals("<=") && !root.value.equals("!=")
-							) {
-						root = root.parentNode;
-						return root;
-					}
-				}
-			else {
-				if((!root.value.equals("==")&& !root.value.equals("<") && !root.value.equals(">") && !root.value.equals("<=")
-						&& !root.value.equals("<=") && !root.value.equals("!=")
-						&& !root.value.equals("+") && !root.value.equals("-")
-						&& !root.value.equals("or"))) {
-					root = root.parentNode;
-					return root;
-				}
-			}
-			}
-			while (root.parentNode.node_type.equals("Operator")) {
+			
+			while (root.node_type.equals("Operator")) {
 				System.out.println("ORDER OF OPERATIONSORDER OF OPERATIONSORDER OF OPERATIONSORDER OF OPERATIONSORDER OF OPERATIONSORDER OF OPERATIONSORDER OF OPERATIONSORDER OF OPERATIONS");
 				if(rel) {
 					System.out.println("RELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELREL");
-					if (!root.value.equals("==")&& !root.value.equals("<") && !root.value.equals(">") && !root.value.equals("<=")
+					if (!root.value.equals("==") && !root.value.equals("<") && !root.value.equals(">") && !root.value.equals("<=")
 							&& !root.value.equals("<=") && !root.value.equals("!=")
 							) {
 						root = root.parentNode;
 					} else {
-						if (!root.value.equals("==")&& !root.value.equals("<") && !root.value.equals(">") && !root.value.equals("<=")
-								&& !root.value.equals("<=") && !root.value.equals("!=") ) {
-							root = root.parentNode;
-						}
+			
 						break;
 					}
-				root = root.parentNode;
+				
 				}
 				else {
 				if (!root.value.equals("==")&& !root.value.equals("<") && !root.value.equals(">") && !root.value.equals("<=")
 						&& !root.value.equals("<=") && !root.value.equals("!=")
-						&& !root.parentNode.value.equals("+") && !root.parentNode.value.equals("-")
-						&& !root.parentNode.value.equals("or")) {
+						&& !root.value.equals("+") && !root.value.equals("-")
+						&& !root.value.equals("or")) {
 					root = root.parentNode;
 				} else {
-					if( !root.value.equals("==")&& !root.value.equals("<") && !root.value.equals(">") && !root.value.equals("<=")
-					&& !root.value.equals("<=") && !root.value.equals("!=")
-					&& !root.parentNode.value.equals("+") && !root.parentNode.value.equals("-")
-					&& !root.parentNode.value.equals("or")) {
-						root = root.parentNode;
-					}
+		
 					break;
 				}
 

@@ -196,22 +196,50 @@ public class Semantic_Visitor {
 						
 					}
 
-				} else if(temp.node_type == "PrintStatement") {
+				} else if(temp.node_type == "PrintStatements") {
 					
 					
+					
+					switch(temp.childNodes.get(0).node_type) {
+					
+					case "Float_Value":
+					case "Integer_Value":
+					case "String_Value":
+					case "True_Keyword":
+					case "False_Keyword":
+						break;
+					
+					case "Variable_Identifier":
+						
+						if(!checkVariable(temp.childNodes.get(0).value)) {
+							System.out.println("Semantic Error: Variable "+temp.childNodes.get(0).value+" in print statement has not been declared yet.");
+							System.exit(1);
+						
+						}
+						
+						break;
+					
+					case "FunctionCall":
+						this.traverse(temp);
+						break;
+						
+					case "Operator":
+						expressionOperationTraversal(temp.childNodes.get(0));
+					
+					}
 					
 				} else if(temp.node_type == "FunctionCall") {
 					
 					
-					if(!checkVariable(temp.childNodes.get(0).value)) {
-						System.out.println("Function with name "+temp.childNodes.get(0).value+" has not been declared yet.");
+					if(!checkVariable(temp.value)) {
+						System.out.println("Function with name "+temp.value+" has not been declared yet.");
 						System.exit(1);
 					}
 					//called function exists
 					//check if same number of parameters
-					
-					if(function_headers.get(temp.childNodes.get(0).value).size() != temp.childNodes.size() -1) {
-						System.out.println("Semantic Error, wrong arguments in function call "+temp.childNodes.get(0).value+"()");
+					System.out.println((function_headers.get(temp.value).size()) + " "+ temp.childNodes.size());
+					if(function_headers.get(temp.value).size() != temp.childNodes.size()) {
+						System.out.println("Semantic Error, wrong arguments in function call "+temp.value+"()");
 						System.exit(1);
 					}
 					
@@ -219,9 +247,9 @@ public class Semantic_Visitor {
 					String expected_parameter_type;
 					
 					
-					for(int z = 1; z <temp.childNodes.size(); z++) {
+					for(int z = 0; z <temp.childNodes.size(); z++) {
 						
-						expected_parameter_type = function_headers.get(temp.childNodes.get(0).value).get(z-1);
+						expected_parameter_type = function_headers.get(temp.value).get(z);
 						
 					
 						typeCheck(temp.childNodes.get(z), expected_parameter_type);
@@ -409,7 +437,7 @@ public class Semantic_Visitor {
 			String type1 = expressionOperationTraversal(node.childNodes.get(0));
 			String type2 = expressionOperationTraversal(node.childNodes.get(1));
 			
-			/*if(type1.equals("bool") && !type2.equals("bool")) {
+			if(type1.equals("bool") && !type2.equals("bool")) {
 				String resultant_type = checkOperatorConstraint(node, type2);
 				return resultant_type;
 			}
@@ -418,7 +446,7 @@ public class Semantic_Visitor {
 				return resultant_type;
 			}
 			
-			else */if (!type1.equals(type2)) {
+			else if (!type1.equals(type2)) {
 				System.out.println(node.childNodes.get(0).value + " "+node.childNodes.get(1).value);
 				System.out.println(type1+" "+type2);
 				System.out.println("Semantic Error Mismatched types");

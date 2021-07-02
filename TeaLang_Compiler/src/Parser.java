@@ -302,10 +302,8 @@ public class Parser {
 			} else {
 				// function call
 
-				root.addNode("FunctionCall");
+				root.addNode("FunctionCall", current_token.value);
 				root = root.switchRoot(root);
-
-				root.addNode("Variable_Identifier", current_token.value);
 				stack.push("Statement");
 				stack.push("Semi_Colon");
 				stack.push("Closing_Bracket");

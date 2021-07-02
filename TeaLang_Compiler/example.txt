@@ -26,7 +26,7 @@ m = 7.9 + (- - - - -5.0) + - 8.9;     //such like this would ensure only the 5.0
 
 while( x < 50 ){
 	let while_variable:string = "No";
-	print OverUnder50(x); //"Under Fifty" x5
+	print OverUnder50(x,y); //"Under Fifty" x5
 	x = x + 1;
 	}
 	
@@ -41,13 +41,13 @@ for(let nice:int = 0; nice < 5; nice = nice + 1;){
 
 }	
 
-print OverUnder50(x); //"Over Fifty"
+print OverUnder50(x,"hello"); //"Over Fifty"
 
 string function_too( age : int, nice : string) {
 	
 	let z:float = 45.0;
 		
-	nice = OverUnder50(x);	
+	nice = OverUnder50(x, y);	
 		
 	return "12";
 }
@@ -67,8 +67,8 @@ int testReturnExpression(){
 }
 
 //let z:float = 5.0;
-//let z:bool = 450+4+6+5 < 7+9 * 7; does not work due to left-recursion when building the AST, leftmost operators take precedence, evaluates to int
-let z:bool = (450+4+6+5) < (7+9 * 7);  //however this way it works
+let z1:bool = 450+4+6+5 < 7+9 * 7; //does not work due to left-recursion when building the AST, leftmost operators take precedence, evaluates to int
+//let z2:bool = (450+4+6+5) < (7+9 * 7) < 56*7+5+4/6;  //however this way it works
 
 
 
@@ -88,3 +88,7 @@ function_too( 6*9*9+7/5 ,"hello");
 print 5+6+9 < 3;
 
 print 5+6 < 5;
+
+print 6;
+
+let curren:bool = 2 < 4 < 6;
