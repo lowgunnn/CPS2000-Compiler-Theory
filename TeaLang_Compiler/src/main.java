@@ -14,18 +14,25 @@ public class main {
 		ArrayList<Token> lexedTokens = new ArrayList<>();
 		
 		System.out.println("~~~~~~~~~~~~~~~~~~~~~LEXER~~~~~~~~~~~~~~~~~~~~~~~~~~");
+		System.out.println("The below text is the generated list of tokens");
 		
 		lexedTokens = lexer.readText("example.txt");
 		
+		System.out.println("~~~~~~~~~~~~~~~~~~~~~PARSER~~~~~~~~~~~~~~~~~~~~~~~~~~");
+		System.out.println("Below we see the contents of the stack, which contain terminals and non-terminals and how they change\n"
+				+ "after pop and push operations, we also see what Production Rules have been fired and its result");
 		AST root = parser.parseProgram(lexedTokens);
 		
 		System.out.println("~~~~~~~~~~~~~~~~~~~~~XML~~~~~~~~~~~~~~~~~~~~~~~~~~");
+		System.out.println("Below is the XML Representation built from the previously generated AST");
 		
 		XML_Visitor xml = new XML_Visitor();
 		
 		xml.traverse(root, 0);
 		
 		System.out.println("~~~~~~~~~~~~~~~~~~~~~SEMANTIC~~~~~~~~~~~~~~~~~~~~~~~~~~");
+		System.out.println("All created scope instances, as well as updated function headers follow, i decided to not include expression evaluations"
+				+ "as they can be very lengthy at times");
 		
 		Stack<Map<String, String>> table = semantic.traverse(root);
 		

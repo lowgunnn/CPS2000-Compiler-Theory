@@ -3,6 +3,8 @@ import java.util.*;
 public class Semantic_Visitor {
 
 	static Stack<Map<String, String>> symbol_table = new Stack<Map<String, String>>();
+	
+	static Map<String, ArrayList<String>> function_headers = new LinkedHashMap<String, ArrayList<String>>();
 
 	public Stack<Map<String, String>> traverse(AST root) {
 
@@ -79,7 +81,12 @@ public class Semantic_Visitor {
 
 						symbol_table.get(symbol_table.size() - 1).put(temp.childNodes.get(1).value,
 								temp.childNodes.get(0).value);
+						//create function header space
+						function_headers.put(temp.childNodes.get(1).value, new ArrayList<String>());
+						
 						this.traverse(temp);
+						System.out.println(function_headers);
+						
 						symbol_table.pop();
 					}
 				} else if (temp.node_type == "ReturnStatement") {
@@ -160,12 +167,22 @@ public class Semantic_Visitor {
 									"Semantic Error, variable " + temp.childNodes.get(j).value + " already exists!");
 							System.exit(1);
 						} else {
-
+							
+							String function_name = temp.parentNode.childNodes.get(1).value;
+							
+							ArrayList<String> parameters = function_headers.get(function_name);
+							
+							parameters.add(temp.childNodes.get(j + 1).value);
+							
+							function_headers.put(function_name, parameters);
+							
 							symbol_table.get(symbol_table.size() - 1).put(temp.childNodes.get(j).value,
 									temp.childNodes.get(j + 1).value);
 						}
 					}
-
+						
+					//ADD FUNCTION SIGNATURES HERE
+					
 				} else if (temp.node_type == "VariableAssignment") {
 
 					if (!checkVariable(temp.childNodes.get(0).value)) {
@@ -190,23 +207,33 @@ public class Semantic_Visitor {
 						System.out.println("Function with name "+temp.childNodes.get(0).value+" has not been declared yet.");
 						System.exit(1);
 					}
+					//called function exists
+					//check if same number of parameters
+					
+					if(function_headers.get(temp.childNodes.get(0).value).size() != temp.childNodes.size() -1) {
+						System.out.println("Semantic Error, wrong arguments in function call "+temp.childNodes.get(0).value+"()");
+						System.exit(1);
+					}
+					
+					String parameter_type;
+					String expected_parameter_type;
+					
 					
 					for(int z = 1; z <temp.childNodes.size(); z++) {
 						
-						switch(temp.childNodes.get(z).node_type) {
+						expected_parameter_type = function_headers.get(temp.childNodes.get(0).value).get(z-1);
 						
-						case "Variable_Identifier":
-						case "FunctionCall":
-							if(!checkVariable(temp.childNodes.get(z).value)) {
-								System.out.println(temp.childNodes.get(z).value+" has not been declared yet.");
-							}
+					
+						typeCheck(temp.childNodes.get(z), expected_parameter_type);
+						
+						
 						
 						}
 						
 					}
-				}
 				
-				else if(temp.parentNode.node_type == "ForLoop"){
+			
+		else if(temp.parentNode.node_type == "ForLoop"){
 					
 					typeCheck(temp, "bool");
 				}
@@ -266,7 +293,7 @@ public class Semantic_Visitor {
 		return "None";
 	}
 
-	public void evaluateVariable(String variable_identifier, String expected_return) {
+	public String evaluateVariable(String variable_identifier, String expected_return) {
 
 		if (checkVariable(variable_identifier)) {
 
@@ -276,6 +303,8 @@ public class Semantic_Visitor {
 				System.out.println("Semamtic Error, identifier expects " + expected_return + " return, instead got "
 						+ variable_type + " from " + variable_identifier);
 				System.exit(1);
+			}else {
+				return variable_type;
 			}
 
 		} else {
@@ -284,14 +313,14 @@ public class Semantic_Visitor {
 			System.exit(1);
 
 		}
-
+		return "";
 	}
 
-	public void typeCheck(AST node, String expected_type) {
+	public String typeCheck(AST node, String expected_type) {
 
 		if (node.node_type == "Variable_Identifier" || node.node_type == "FunctionCall") {
 
-			evaluateVariable(node.value, expected_type);
+			return evaluateVariable(node.value, expected_type);
 
 		} else if (node.node_type == "Integer_Value" || node.node_type == "Float_Value"
 				|| node.node_type == "String_Value" || node.node_type == "True_Keyword"
@@ -301,7 +330,7 @@ public class Semantic_Visitor {
 
 			case "Integer_Value":
 				if (expected_type.equals("int")) {
-					break;
+					return "int";
 				} else {
 					System.out.println("Expected " + expected_type + " value, instead of int literal");
 					System.exit(1);
@@ -309,7 +338,7 @@ public class Semantic_Visitor {
 
 			case "Float_Value":
 				if (expected_type.equals("float")) {
-					break;
+					return "float";
 				} else {
 					System.out.println("Expected " + expected_type + " value, insted of float literal");
 					System.exit(1);
@@ -317,7 +346,7 @@ public class Semantic_Visitor {
 
 			case "String_Value":
 				if (expected_type.equals("string")) {
-					break;
+					return "string";
 				} else {
 					System.out.println("Expected " + expected_type + " value, isntead of string literal");
 					System.exit(1);
@@ -326,7 +355,7 @@ public class Semantic_Visitor {
 			case "True_Keyword":
 			case "False_Keyword":
 				if (expected_type.equals("bool")) {
-					break;
+					return "bool";
 				} else {
 					System.out.println("Expected " + expected_type + " value, instead of bool literal");
 					System.exit(1);
@@ -341,10 +370,12 @@ public class Semantic_Visitor {
 				System.out.println();
 				System.out.println("Expected " + expected_type + " value, instead of "+evaluated_type+" expression");
 				System.exit(1);
+			}else {
+				return evaluated_type;
 			}
 
 		}
-
+		return "";
 	}
 
 	public String expressionOperationTraversal(AST node) {

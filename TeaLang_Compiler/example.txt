@@ -81,4 +81,6 @@ x = x+1;
 let boolean:bool = not not not not true and not false;
 
 
-function_too( ming() ,"hello");
+//function_too( false or true ,"hello");  //testing function call expression evaluations
+
+function_too( 5+9*7/5 ,"hello");

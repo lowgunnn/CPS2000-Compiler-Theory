@@ -577,7 +577,7 @@ public class Parser {
 
 		case 48:
 			
-			root.addNode("Literal", current_token.value);
+			root.addNode(current_token.type, current_token.value);
 			stack.push("ActualParams");
 			stack.push("SimpleExpression");
 			stack.push("RelationalOp");
@@ -713,7 +713,6 @@ public class Parser {
 
 	public static AST parseProgram(ArrayList<Token> lexedTokens) {
 
-		System.out.println("~~~~~~~~~~~~~~PARSER~~~~~~~~~~~~~~~~~~~~~~~");
 
 		stack.push("$");
 		stack.push("Program");
