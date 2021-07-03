@@ -4,39 +4,41 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class Lexer {
-	
-	
+
 	public static ArrayList<Token> lexedTokens = new ArrayList<>();
-	
+
 	public static int[][] transition_table = {
-			{ 1, 1, 3, 3, -1, -1, -1, -1, -1, -1, 10, -1, 12, 13, -1, 13, -1, 17, 17, 17, -1, -1, -1 }, // digits
-			{ 2, 3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 12, 13, -1, 13, -1, 17, 17, 17, -1, -1, -1 }, // . as in 5.6, can be  .99999
-			{ 4, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 12, 13, -1, 13, -1, 17, 17, 17, -1, -1, -1 }, 
-			{ 5, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 13, 12, 15, -1, 15, -1, 17, 17, 17, -1, -1, -1 },
-			{ 6, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 12, 13, -1, 13, -1, 17, 17, 17, -1, -1, -1 },
-			{ 7, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 12, 13, -1, 13, -1, 17, 17, 17, -1, -1, -1 },
-			{ 8, -1, -1, -1, -1, -1, 9, 9, 9, -1, -1, -1, 12, 13, -1, 13, -1, 17, 17, 17, -1, -1, -1 },
-			{ 10, -1, -1, -1, -1, -1, -1, -1, -1, -1, 10, -1, 12, 13, -1, 13, -1, 17, 17, 17, -1, -1, -1 },
-			{ 11, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 12, 12, 13, -1, 16, -1, 17, 17, 17, -1, -1, -1 },
-			{ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 12, 13, -1, 13, -1, 18, 18, 18, -1, -1, -1 },
-			{ 17, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 12, 13, -1, 13, -1, 20, 19, 20, -1, -1, -1 },
-			{ 21, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 12, 13, -1, 13, -1, 17, 17, 17, -1, -1, -1 },
-			{ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 14, 13, -1, 13, -1, -1, -1, -1, -1, -1, -1 },
-			{ 10, -1, -1, -1, -1, -1, -1, -1, -1, -1, 10, -1, 12, 13, -1, 13, -1, 17, 17, 17, -1, -1, -1 },
-			{ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 12, 13, -1, 13, -1, 17, 17, 17, -1, -1, -1 },
-			{ 22, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
-			{ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 13, -1, -1, -1, -1, -1, -1, -1, -1, -1 }
+			{ 1, 1, 3, 3, -1, -1, -1, -1, -1, -1, 10, -1, 12, 13, -1, 13, -1, 17, 17, 17, -1, -1, -1, 24, -1, -1 }, // digits
+			{ 2, 3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 12, 13, -1, 13, -1, 17, 17, 17, -1, -1, -1, 24, -1, -1 }, // . as in 5.6																										
+			{ 4, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 12, 13, -1, 13, -1, 17, 17, 17, -1, -1, -1, 24, -1, -1 },
+			{ 5, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 13, 12, 15, -1, 15, -1, 17, 17, 17, -1, -1, -1, 24, -1 , -1},
+			{ 6, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 12, 13, -1, 13, -1, 17, 17, 17, -1, -1, -1, 24, -1 , -1},
+			{ 7, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 12, 13, -1, 13, -1, 17, 17, 17, -1, -1, -1, 24, -1 , -1},
+			{ 8, -1, -1, -1, -1, -1, 9, 9, 9, -1, -1, -1, 12, 13, -1, 13, -1, 17, 17, 17, -1, -1, -1, -1, 24, -1 , -1},
+			{ 10, -1, -1, -1, -1, -1, -1, -1, -1, -1, 10, -1, 12, 13, -1, 13, -1, 17, 17, 17, -1, -1, -1, 24, -1 , -1},
+			{ 11, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 12, 12, 13, -1, 16, -1, 17, 17, 17, -1, -1, -1, 24, -1 , -1},
+			{ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 12, 13, -1, 13, -1, 18, 18, 18, -1, -1, -1, -1, -1 , -1},
+			{ 17, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 12, 13, -1, 13, -1, 20, 19, 20, -1, -1, -1, 24, -1 , -1},
+			{ 21, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 12, 13, -1, 13, -1, 17, 17, 17, -1, -1, -1, 24, -1 , -1},
+			{ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 14, 13, -1, 13, -1, -1, -1, -1, -1, -1, -1, 24, -1 , -1},
+			{ 10, -1, -1, -1, -1, -1, -1, -1, -1, -1, 10, -1, 12, 13, -1, 13, -1, 17, 17, 17, -1, -1, -1, 24, -1 , -1},
+			{ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 12, 13, -1, 13, -1, 17, 17, 17, -1, -1, -1, 24, -1 , -1},
+			{ 22, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 , -1},
+			{ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 13, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 , -1}, // tabs																									// char
+			{ 23, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 25 , -1} // Apostrophe tal 'c'
+																												
 	};
 
-	public static int[] final_states = { 1, 3, 4, 5, 7, 8, 9, 10, 11, 14, 16, 20, 21, 22 };
+	public static int[] final_states = { 1, 3, 4, 5, 7, 8, 9, 10, 11, 14, 16, 20, 21, 22, 25};
 
 	public static int new_state_transition(int current_state, char encountered_char) {
 
 		int ascii_value = (int) encountered_char;
-		
-		//NB: Insejt li fil-Java tista taghmel switch statement b strings, ghalhekk sensiela ta cursed else if statements
-		
-		//lexer works, will not touch again
+
+		// NB: Insejt li fil-Java tista taghmel switch statement b strings, ghalhekk
+		// sensiela ta cursed else if statements
+
+		// lexer works, will not touch again
 		// digits
 		if (ascii_value <= 57 && ascii_value >= 48) {
 
@@ -45,6 +47,7 @@ public class Lexer {
 		}
 		// letters
 		else if ((ascii_value <= 90 && ascii_value >= 65) || (ascii_value >= 97 && ascii_value <= 122)) {
+			
 			return transition_table[13][current_state];
 		}
 		// dot in numbers
@@ -87,10 +90,15 @@ public class Lexer {
 		// iverted commas tal istrings
 		else if (encountered_char == '"') {
 			return transition_table[10][current_state];
+		} else if (encountered_char == '\'') {
+
+			return transition_table[17][current_state];
 		}
+
 		// one spacers
 		else if (encountered_char == ';' || encountered_char == ':' || encountered_char == '('
-				|| encountered_char == ')' || encountered_char == '{' || encountered_char == '}' || encountered_char == ',') {
+				|| encountered_char == ')' || encountered_char == '{' || encountered_char == '}'
+				|| encountered_char == ',' || encountered_char == '[' || encountered_char == ']') {
 			return transition_table[11][current_state];
 		} else if (encountered_char == '\n') {
 			return transition_table[12][current_state];
@@ -100,22 +108,22 @@ public class Lexer {
 
 			return transition_table[14][current_state];
 		} else if (encountered_char == '\u001a') {
-			
-			
-			
+
 			return transition_table[15][current_state];
-		}
-		else if(encountered_char == '\t') {
+		} else if (encountered_char == '\t') {
 			return transition_table[16][current_state];
 		}
+
 		// otherwise an unexpected character not in grammer, send 0 state
 		else {
+
 			return -1;
 		}
 
 	}
 
 	public static ArrayList<Token> readText(String filename) {
+		
 		String data = "empty";
 		String entire = "";
 		String lexeme = "";
@@ -127,14 +135,14 @@ public class Lexer {
 
 			File file = new File(filename);
 			Scanner sc = new Scanner(file);
-			
-			if(!sc.hasNextLine()) {
+
+			if (!sc.hasNextLine()) {
 				System.out.println("File Empty");
 				System.exit(1);
 			}
-			
+
 			while (sc.hasNextLine()) {
-				
+
 				line_number++;
 				data = sc.nextLine();
 				entire = data + "\n";
@@ -142,11 +150,10 @@ public class Lexer {
 				if (!sc.hasNextLine()) {
 					entire += '\u001a';
 				}
-				
-				
+
 				for (int i = 0; i < entire.length(); i++) {
 					char encountered_char = entire.charAt(i);
-					
+
 					// skips initials spaces or newlines before tokens, this does not include those
 					// inside " " string identifiers since previously we would have encountered an
 					// inverted comma
@@ -173,12 +180,13 @@ public class Lexer {
 
 						if (is_final) {
 
-							//System.out.println(lexeme);
-							lexedTokens.add(new Token(lexeme,line_number,state));
+							
+							lexedTokens.add(new Token(lexeme, line_number, state));
 							lexeme = "";
 							state = 0;
 							i--;
 						} else {
+							// System.out.println(state);
 							System.out.println(lexeme);
 							System.out.println("LEXICAL ERROR ENCOUNTERED AT LINE NUMBER: " + line_number);
 							System.exit(1);
@@ -198,9 +206,9 @@ public class Lexer {
 			System.exit(1);
 			// opens and reads the specified file
 		}
-		//adds EOF Token
-		lexedTokens.add(new Token(lexeme,line_number,state));
-		
+		// adds EOF Token
+		lexedTokens.add(new Token(lexeme, line_number, state));
+
 		for (Token token : lexedTokens) {
 
 			System.out.println(token.type);

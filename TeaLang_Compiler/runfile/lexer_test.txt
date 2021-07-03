@@ -1,0 +1,25 @@
+let num : int = 23;
+
+let chara : char = '2';
+
+char n(x:char ){
+
+print '2';
+
+return x;
+
+}
+
+
+n('2', '4'=='2', '{'*'3', '5'+'4');
+
+
+let automatic : auto = 123;
+
+auto f(x:char){
+
+let z:auto = 123;
+
+return z;
+
+}

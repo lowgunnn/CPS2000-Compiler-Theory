@@ -69,6 +69,12 @@ public class Token {
 				return "Or_Keyword";
 			case "not":
 				return "Not_Keyword";
+			case "char":
+				return "Char_Keyword";
+			case "auto":
+				return "Auto_Keyword";
+			case "tlstruct":
+				return "Struct_Keyword";
 			default:
 				return "Variable_Identifier";
 			
@@ -100,11 +106,19 @@ public class Token {
 				return "Closing_Curly";
 			case ",":
 				return "Comma";
+			case "[":
+				return "Opening_Square";
+			case "]":
+				return "Closing_Square";
+				
 			
 			}
 		case 22:
 			
 			return "End_Of_File";
+			
+		case 25:
+			return "Char_Value";
 		
 		default:
 			System.out.println("Unexpected Token Type Encountered!!");
