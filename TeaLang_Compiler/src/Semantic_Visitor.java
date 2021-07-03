@@ -120,9 +120,9 @@ public class Semantic_Visitor {
 
 					typeCheck(temp.childNodes.get(0), expected_type);
 					
-					if(temp.childNodes.get(0).node_type == "FunctionCall") {
+					/*if(temp.childNodes.get(0).node_type == "FunctionCall") {
 						this.traverse(temp);
-					}
+					}*/
 
 					/*
 					 * if(temp.childNodes.get(0).node_type == "Variable_Identifier" ||

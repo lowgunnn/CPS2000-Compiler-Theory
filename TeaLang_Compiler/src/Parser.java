@@ -326,13 +326,16 @@ public class Parser {
 			break;
 
 		case 28:
-			if (root.node_type == "FormalParams") {
+			if (root.node_type == "FormalParams" ) {
 				root = root.parentNode; // only leave if we have began inserting parameters
+			}else if( root.node_type == "FunctionCall") {
+				root = root.parentNode.parentNode;
 			}
 			System.out.println("No more parameters!");
 			stack.pop(); // pops the closing bracket expected afterwards
 			System.out.println("POPPED");
 			break;
+			
 		case 29:
 			// Parameters
 			stack.push("Params");
@@ -441,15 +444,17 @@ public class Parser {
 			break;
 
 		case 34:
-			root.addNode("Variable_Identifier", current_token.value);
 			if (next_token.type == "Opening_Bracket") {
 				// function call
+				root.addNode("FunctionCall", current_token.value);
+				root = root.switchRoot(root);
 				stack.push("Factor");
 				stack.push("MultiplicativeOp");
 				stack.push("Closing_Bracket");
 				stack.push("ActualParams");
 				stack.push("Opening_Bracket");
 			} else {
+				root.addNode("Variable_Identifier", current_token.value);
 				stack.push("Factor");
 				stack.push("MultiplicativeOp");
 			}
@@ -487,6 +492,7 @@ public class Parser {
 
 			if (next_token.type == "Opening_Bracket") {
 				root.addNode("FunctionCall", current_token.value);
+				root = root.switchRoot(root);
 				// function call
 				stack.push("Term");
 				stack.push("AdditiveOp");
@@ -531,6 +537,7 @@ public class Parser {
 			if (next_token.type == "Opening_Bracket") {
 				// function call
 				root.addNode("FunctionCall", current_token.value);
+				root = root.switchRoot(root);
 				stack.push("SimpleExpression");
 				stack.push("RelationalOp");
 				stack.push("Term");
@@ -624,6 +631,7 @@ public class Parser {
 			if (next_token.type == "Opening_Bracket") {
 				// function call
 				root.addNode("FunctionCall", current_token.value);
+				root = root.switchRoot(root);
 				stack.push("ActualParams");
 				stack.push("SimpleExpression");
 				stack.push("RelationalOp");
@@ -794,7 +802,6 @@ public class Parser {
 				}
 
 				if (last_terminal == "Variable_Identifier") {
-
 					root.addNode(current_token.type, current_token.value);
 
 				}

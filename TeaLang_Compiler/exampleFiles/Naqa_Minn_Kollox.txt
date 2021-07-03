@@ -24,7 +24,7 @@ print "Entered If Statement";
 print "ELSE BLOCK";
 }
 
-while( x < 30){
+while( x < 39){
 
 print x;
 x = x+1;
@@ -36,10 +36,9 @@ if(i / 2.0 == 4.0){
 
 print "If i divided by 2 is 4, then i must be 8";
 }else{
-return 4;
+
 print "i is definitly not 8";
 
 }
 
 }
-

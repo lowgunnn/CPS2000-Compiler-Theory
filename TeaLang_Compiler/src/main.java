@@ -39,7 +39,7 @@ public class main {
 		
 		System.out.println("\n~~~~~~~~~~~~~~~~~~~~~TEA LANG INTERPRETER~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		
-		interpreter.traverse(root);
+		interpreter.traverse(root,true);
 		
 		
 		String x = "Hello";
