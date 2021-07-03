@@ -57,7 +57,7 @@ public class Parser {
 																														// Call
 			{ 0, 0, 0, 0, 0, 0, 0, 19, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // SubExpression
 			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 0, 0, 0, 0, 0, 0, 20, 0, 0 }, // Unary
-			{ 0, 0, 0, 0, 0, 0, 0, 50, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 49, 48, 48, 48, 48, 48, 0, 51, 0, 0, 0, 0, 0, 0,
+			{ 0, 0, 0, 0, 0, 0, 0, 50, 28, 0, 0, 0, 0, 0, 0, 0, 0, 0, 49, 48, 48, 48, 48, 48, 51, 0, 0, 0, 0, 0, 0,
 					51, 0, 52 }, // ActualParams
 			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 23, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, // Else-Statements
 			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } // Comma
@@ -669,14 +669,20 @@ public class Parser {
 
 		case 51:
 			// root.addNode("Operator", current_token.value);
+			if(root.node_type != "FunctionCall") {
 			root = root.operatorSwitch(root, current_token.value);
+			}else {
+				root.addNode("Operator", current_token.value);
+				root = root.switchRoot(root);
+			}
+			
 			stack.push("ActualParams");
-			stack.push("SimpleExpression");
+			/*stack.push("SimpleExpression");
 			stack.push("RelationalOp");
 			stack.push("Term");
 			stack.push("AdditiveOp");
 			stack.push("Factor");
-			stack.push("MultiplicativeOp");
+			stack.push("MultiplicativeOp");*/
 			stack.push("Expression");
 			break;
 		case 52:

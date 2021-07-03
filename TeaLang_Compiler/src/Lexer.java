@@ -195,6 +195,7 @@ public class Lexer {
 			}
 		} catch (FileNotFoundException e) {
 			System.out.println("An error occurred.\nThe file " + filename + " was not found");
+			System.exit(1);
 			// opens and reads the specified file
 		}
 		//adds EOF Token

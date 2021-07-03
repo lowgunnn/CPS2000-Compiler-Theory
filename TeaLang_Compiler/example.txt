@@ -1,0 +1,42 @@
+float Pow(x:float, n:int){
+
+print "The function is going to compute the power of:";
+print x;
+print "Raised by";
+print n;
+
+
+let y:float = 1.0;
+
+if(n > 0){
+
+for(let z: int = n; z>0; z=z-1;){
+
+y = y*x;
+
+}
+
+}
+else
+{
+
+
+
+for(let z: int = n; z<0; z=z+1;){
+
+
+y = y/x;
+
+}
+
+}
+return y;
+
+}
+
+let x: float = Pow(6.4,3);
+
+
+print x;
+
+print Pow(5.0,-2);

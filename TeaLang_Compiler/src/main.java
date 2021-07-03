@@ -36,7 +36,7 @@ public class main {
 				+ "\nas they can be very lengthy at times");
 		
 		Stack<Map<String, String>> table = semantic.traverse(root);
-		
+		System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n");
 		System.out.println("\n~~~~~~~~~~~~~~~~~~~~~TEA LANG INTERPRETER~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		
 		interpreter.traverse(root,true);

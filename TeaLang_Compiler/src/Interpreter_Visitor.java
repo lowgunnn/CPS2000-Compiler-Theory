@@ -464,8 +464,11 @@ public class Interpreter_Visitor {
 
 		} else {
 			// is an operator so we must evaluate the expression and climb da tree
+			
 			String value_type[] = expressionOperationTraversal(node);
+			
 			if (!expected_type.equals(value_type[1])) {
+				
 				System.out.println();
 				System.out.println("Expected " + expected_type + " value, instead of " + value_type[1] + " expression");
 				System.exit(1);
@@ -524,8 +527,9 @@ public class Interpreter_Visitor {
 
 		else if (node.childNodes.size() == 1) {
 			
-			
+		
 			String[] type_value = expressionOperationTraversal(node.childNodes.get(0));
+			
 			
 			if(type_value[1] == "bool") {
 				
@@ -533,13 +537,28 @@ public class Interpreter_Visitor {
 				return new String[] {String.valueOf(!value), "bool"};
 			}
 			
-			if(node.node_type == "FunctionCall") {
+			if(node.node_type.equals("FunctionCall")) {
 				
 				String value = traverse(node.parentNode, false);
 				
 				return new String[] {value, getType(node.value)};
 				
 			}
+			
+			if(node.value.equals("+")) {
+				
+				System.out.println("HMM");
+				
+				return new String[] {type_value[0], type_value[1]};
+			}
+			
+			if(node.value.equals( "-")) {
+				
+				int negative = Integer.valueOf(type_value[0])*-1;
+				
+				return new String[] {String.valueOf(negative), type_value[1]};
+			}
+				
 			
 			
 		}
@@ -666,9 +685,10 @@ public class Interpreter_Visitor {
 				return new String[] { String.valueOf(fl_result), "float" };
 				
 			case "/":
-
+				
+								
 				fl_result = Float.parseFloat(value1) / Float.parseFloat(value2);
-
+				
 				return new String[] { String.valueOf(fl_result), "float" };
 				
 
