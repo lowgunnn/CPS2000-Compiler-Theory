@@ -1,3 +1,4 @@
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Stack;
@@ -14,10 +15,19 @@ public class main {
 		
 		ArrayList<Token> lexedTokens = new ArrayList<>();
 		
+		File folder = new File("runfile");
+		File[] listOfFiles = folder.listFiles();
+		
+		if(listOfFiles.length == 0) {
+			System.out.println("Please put a supplied example TeaLang file, in the run directory /runfile. ");
+		}
+		
+		for (int i = 0; i < listOfFiles.length; i++) {
+		
 		System.out.println("~~~~~~~~~~~~~~~~~~~~~LEXER~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		System.out.println("The below text is the generated list of tokens");
 		
-		lexedTokens = lexer.readText("example.txt");
+		lexedTokens = lexer.readText("runFile/"+listOfFiles[i].getName());
 		
 		System.out.println("\n~~~~~~~~~~~~~~~~~~~~~PARSER~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		System.out.println("Below we see the contents of the stack, which contain terminals and non-terminals and how they change\n"
@@ -42,9 +52,7 @@ public class main {
 		interpreter.traverse(root,true);
 		
 		
-		String x = "Hello";
-		String y = "World";
-		
+		}
 	
 	}
 
