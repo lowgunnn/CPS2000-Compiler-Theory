@@ -180,7 +180,12 @@ public class Parser {
 			break;
 
 		case 11:
+			if(current_token.type == "String_Value") {
+				root.addNode(current_token.type, current_token.value.substring(1,current_token.value.length()-1));
+			}
+			else {
 			root.addNode(current_token.type, current_token.value);
+			}
 			stack.push("SimpleExpression");
 			stack.push("RelationalOp");
 			stack.push("Term");
@@ -425,7 +430,12 @@ public class Parser {
 			break;
 
 		case 33:
+			if(current_token.type == "String_Value") {
+				root.addNode(current_token.type, current_token.value.substring(1,current_token.value.length()-1));
+			}
+			else {
 			root.addNode(current_token.type, current_token.value);
+			}
 			stack.push("Factor");
 			stack.push("MultiplicativeOp");
 			break;
@@ -463,7 +473,12 @@ public class Parser {
 			break;
 
 		case 37:
+			if(current_token.type == "String_Value") {
+				root.addNode(current_token.type, current_token.value.substring(1,current_token.value.length()-1));
+			}
+			else {
 			root.addNode(current_token.type, current_token.value);
+			}
 			stack.push("Term");
 			stack.push("AdditiveOp");
 			break;
@@ -501,7 +516,12 @@ public class Parser {
 			// stack.push("Expression");
 			break;
 		case 41:
+			if(current_token.type == "String_Value") {
+				root.addNode(current_token.type, current_token.value.substring(1,current_token.value.length()-1));
+			}
+			else {
 			root.addNode(current_token.type, current_token.value);
+			}
 			stack.push("SimpleExpression");
 			stack.push("RelationalOp");
 			break;
@@ -584,7 +604,12 @@ public class Parser {
 
 		case 48:
 
+			if(current_token.type == "String_Value") {
+				root.addNode(current_token.type, current_token.value.substring(1,current_token.value.length()-1));
+			}
+			else {
 			root.addNode(current_token.type, current_token.value);
+			}
 			stack.push("ActualParams");
 			stack.push("SimpleExpression");
 			stack.push("RelationalOp");

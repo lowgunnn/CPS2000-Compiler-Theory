@@ -10,6 +10,7 @@ public class main {
 		Lexer lexer  = new Lexer();
 		Parser parser = new Parser();
 		Semantic_Visitor semantic = new Semantic_Visitor();
+		Interpreter_Visitor interpreter = new Interpreter_Visitor();
 		
 		ArrayList<Token> lexedTokens = new ArrayList<>();
 		
@@ -36,11 +37,15 @@ public class main {
 		
 		Stack<Map<String, String>> table = semantic.traverse(root);
 		
-		System.out.println(table);
+		System.out.println("\n~~~~~~~~~~~~~~~~~~~~~TEA LANG INTERPRETER~~~~~~~~~~~~~~~~~~~~~~~~~~");
+		
+		interpreter.traverse(root);
 		
 		
+		String x = "Hello";
+		String y = "World";
 		
-		
+	
 	}
 
 }

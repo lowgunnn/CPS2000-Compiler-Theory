@@ -94,14 +94,23 @@ public class Semantic_Visitor {
 					// evaluate the expression, check if it matches with the last declared
 					// function's return type
 					AST parent;
-
+					
 					parent = temp.parentNode;
 					int levels = 1;
+					try {
 					while (parent.node_type != "FunctionDecl") {
 						levels++;
+						
 						parent = parent.parentNode;
+						
+						}
+					}catch(Exception e){
+						System.out.println("Semantic Error Return outside of function decleration.");
+						System.exit(1);
 					}
-
+					
+					
+					
 					Object[] key_set = symbol_table.get(symbol_table.size() - (levels) - 1).keySet().toArray();
 
 					String expected_type = symbol_table.get(symbol_table.size() - (levels) - 1)
@@ -110,6 +119,10 @@ public class Semantic_Visitor {
 					// variable
 
 					typeCheck(temp.childNodes.get(0), expected_type);
+					
+					if(temp.childNodes.get(0).node_type == "FunctionCall") {
+						this.traverse(temp);
+					}
 
 					/*
 					 * if(temp.childNodes.get(0).node_type == "Variable_Identifier" ||
@@ -237,7 +250,6 @@ public class Semantic_Visitor {
 					}
 					//called function exists
 					//check if same number of parameters
-					System.out.println((function_headers.get(temp.value).size()) + " "+ temp.childNodes.size());
 					if(function_headers.get(temp.value).size() != temp.childNodes.size()) {
 						System.out.println("Semantic Error, wrong arguments in function call "+temp.value+"()");
 						System.exit(1);
@@ -437,7 +449,7 @@ public class Semantic_Visitor {
 			String type1 = expressionOperationTraversal(node.childNodes.get(0));
 			String type2 = expressionOperationTraversal(node.childNodes.get(1));
 			
-			if(type1.equals("bool") && !type2.equals("bool")) {
+			/*if(type1.equals("bool") && !type2.equals("bool")) {
 				String resultant_type = checkOperatorConstraint(node, type2);
 				return resultant_type;
 			}
@@ -446,8 +458,7 @@ public class Semantic_Visitor {
 				return resultant_type;
 			}
 			
-			else if (!type1.equals(type2)) {
-				System.out.println(node.childNodes.get(0).value + " "+node.childNodes.get(1).value);
+			else*/ if (!type1.equals(type2)) {
 				System.out.println(type1+" "+type2);
 				System.out.println("Semantic Error Mismatched types");
 				System.exit(1);

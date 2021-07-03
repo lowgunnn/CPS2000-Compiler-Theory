@@ -1,0 +1,100 @@
+string OverUnder50( age : int, nice : string) {
+	
+	let z:float = 45.0;
+	
+	if( age < 50){
+	let meme4:string = "No";
+	//return "Under Fifty";
+	}
+	else{
+	let meme99:string = "No";
+	return "Over Fifty";
+	
+	}
+}
+
+let x:int = 45;
+
+let y:string = "hello";
+
+let m:float = 7.9 + - - - - -5.0 + -8.9;   //the entire - list, acts upon the entire rhs expression (5.0 + - 8.9) , therefore sub-expressions need to be used for more specific grouping
+m = 7.9 + (- - - - -5.0) + - 8.9;     //such like this would ensure only the 5.0 would be affected
+
+
+
+
+
+while( x < 50 ){
+	let while_variable:string = "No";
+	print OverUnder50(x,y); //"Under Fifty" x5
+	x = x + 1;
+	}
+	
+	
+for(let nice:int = 0; nice < 5; nice = nice + 1;){
+	let meme:string = "No";
+	let meme2:string = "No";
+	let meme3:string = "No";
+	let meme4:string = "No";
+	
+	
+
+}	
+
+print OverUnder50(x,"hello"); //"Over Fifty"
+
+string function_too( age : int, nice : string) {
+	
+	let z:float = 45.0;
+		
+	nice = OverUnder50(x, y);	
+		
+	return "12";
+}
+
+string function( age : int, nice : string) {
+	
+	
+		
+	return y;
+}
+
+
+int testReturnExpression(){
+
+	//return 5+60;
+	
+	//return OverUnder50(x);
+	
+	return testReturnExpression();    //<- aha infinite looop but we have "tricked" the semantic analysis
+	
+	
+}
+
+//let z:float = 5.0;
+let z1:bool = 450+4+6+5 < 7+9 * 7; //does not work due to left-recursion when building the AST, leftmost operators take precedence, evaluates to int
+//let z2:bool = (450+4+6+5) < (7+9 * 7) < 56*7+5+4/6;  //however this way it works
+
+
+
+
+print x;
+x = x+1;
+//x = x and 5;
+
+
+
+let boolean:bool = not not not not true and not false;
+
+
+//function_too( false or true ,"hello");  //testing function call expression evaluations
+
+function_too( 6*9*9+7/5 ,"hello");
+
+print 5+6+9 < 3;
+
+print 5+6 < 5;
+
+print 6;
+
+let curren:bool = 2 < 4;
