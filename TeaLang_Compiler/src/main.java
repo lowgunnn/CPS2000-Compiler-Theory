@@ -45,7 +45,10 @@ public class main {
 		System.out.println("All created scope instances, as well as updated function headers follow, i decided to not include expression evaluations"
 				+ "\nas they can be very lengthy at times");
 		
-		Stack<Map<String, String>> table = semantic.traverse(root);
+		semantic.traverse(root);
+		
+
+		
 		System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n");
 		System.out.println("\n~~~~~~~~~~~~~~~~~~~~~TEA LANG INTERPRETER~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		

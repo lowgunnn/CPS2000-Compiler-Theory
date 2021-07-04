@@ -3,6 +3,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Stack;
 
+import javax.crypto.Mac;
+
 
 
 public class Interpreter_Visitor {
@@ -12,9 +14,11 @@ public class Interpreter_Visitor {
 	static Stack<Map<String, String>> symbol_table = new Stack<Map<String, String>>();
 	static Stack<Map<String, String>> value_table = new Stack<Map<String, String>>();
 	
-	static Map<String, AST> function_map = new LinkedHashMap<String, AST>();
+	static Map<String, ArrayList<AST>> function_map = new LinkedHashMap<String, ArrayList<AST>>();
 	
-	static Map<String, ArrayList<String>> function_headers = new LinkedHashMap<String, ArrayList<String>>();
+	static Map<String, ArrayList<ArrayList<String>>> function_headers = new LinkedHashMap<String, ArrayList<ArrayList<String>>>();
+	static Map<String, ArrayList<String>> function_returns = new LinkedHashMap<String, ArrayList<String>>();
+	
 
 	public String traverse(AST root, boolean create_scope) {
 		
@@ -144,14 +148,23 @@ public class Interpreter_Visitor {
 
 				} else if (temp.node_type == "FunctionDecl") {
 						
+					if (checkVariable(temp.childNodes.get(1).value)) {
 						
+					}else {
+						function_headers.put(temp.childNodes.get(1).value, new ArrayList<ArrayList<String>>());
+						function_returns.put(temp.childNodes.get(1).value, new ArrayList<String>());
+						function_map.put(temp.childNodes.get(1).value, new ArrayList<AST>());
+					}
 
 						symbol_table.get(symbol_table.size() - 1).put(temp.childNodes.get(1).value,
 								temp.childNodes.get(0).value);
 						// create function header space
-						function_headers.put(temp.childNodes.get(1).value, new ArrayList<String>());
-
-						function_map.put(temp.childNodes.get(1).value, temp);
+						
+						
+						
+						function_headers.get(temp.childNodes.get(1).value).add( new ArrayList<String>());
+						
+						function_map.get(temp.childNodes.get(1).value).add(temp);
 						
 						
 						symbol_table.push(new LinkedHashMap<String, String>());
@@ -179,7 +192,7 @@ public class Interpreter_Visitor {
 					String function_name = parent.childNodes.get(1).value;
 										
 					
-					String expected_type = getType(function_name);
+					String expected_type = parent.childNodes.get(0).value;
 					// variable
 					
 					String[] key_value = valueCheck(temp.childNodes.get(0), expected_type);
@@ -206,11 +219,9 @@ public class Interpreter_Visitor {
 
 							String function_name = temp.parentNode.childNodes.get(1).value;
 
-							ArrayList<String> parameters = function_headers.get(function_name);
+							function_headers.get(function_name).get(function_headers.get(function_name).size()-1).add(temp.childNodes.get(j + 1).value);
 
-							parameters.add(temp.childNodes.get(j + 1).value);
-
-							function_headers.put(function_name, parameters);
+							
 
 							symbol_table.get(symbol_table.size() - 1).put(temp.childNodes.get(j).value,
 									temp.childNodes.get(j + 1).value);
@@ -218,7 +229,7 @@ public class Interpreter_Visitor {
 					}
 
 					// ADD FUNCTION SIGNATURES HERE
-
+					
 				} else if (temp.node_type == "VariableAssignment") {
 
 					if (!checkVariable(temp.childNodes.get(0).value)) {
@@ -283,7 +294,11 @@ public class Interpreter_Visitor {
 					
 					String function_name = temp.value;
 					
-					AST function_node = function_map.get(function_name);
+					
+					
+					int function_index = getFunctionNode(temp);
+					
+					AST function_node = function_map.get(function_name).get(function_index);
 					
 					String[] value_type;
 					symbol_table.push(new LinkedHashMap<String, String>());
@@ -291,8 +306,10 @@ public class Interpreter_Visitor {
 			
 					
 					for (int z = 0; z < temp.childNodes.size(); z++) {
-
-						expected_parameter_type = function_headers.get(temp.value).get(z);
+						
+						
+						
+						expected_parameter_type = function_headers.get(temp.value).get(function_index).get(z);
 						
 						value_type = valueCheck(temp.childNodes.get(z), expected_parameter_type);
 						
@@ -406,6 +423,8 @@ public class Interpreter_Visitor {
 
 	public String[] valueCheck(AST node, String expected_type) {
 
+		
+		
 		if (node.node_type == "Variable_Identifier" ) {
 
 			return new String[] { getValue(node.value), getType(node.value) };
@@ -415,6 +434,9 @@ public class Interpreter_Visitor {
 			
 		
 			String value = traverse(node.parentNode, false);
+			
+			
+			
 			
 			return new String[] {value, getType(node.value)};
 			
@@ -431,24 +453,21 @@ public class Interpreter_Visitor {
 				if (expected_type.equals("int")) {
 					return new String[] {node.value,"int"};
 				} else {
-					System.out.println("Expected " + expected_type + " value, instead of int literal");
-					System.exit(1);
+					
 				}
 
 			case "Float_Value":
 				if (expected_type.equals("float")) {
 					return new String[] {node.value,"float"};
 				} else {
-					System.out.println("Expected " + expected_type + " value, insted of float literal");
-					System.exit(1);
+					
 				}
 
 			case "String_Value":
 				if (expected_type.equals("string")) {
 					return new String[] {node.value,"string"};
 				} else {
-					System.out.println("Expected " + expected_type + " value, isntead of string literal");
-					System.exit(1);
+					
 				}
 
 			case "True_Keyword":
@@ -456,8 +475,7 @@ public class Interpreter_Visitor {
 				if (expected_type.equals("bool")) {
 					return new String[] {node.value,"bool"};
 				} else {
-					System.out.println("Expected " + expected_type + " value, instead of bool literal");
-					System.exit(1);
+					
 				}
 
 			}
@@ -469,15 +487,13 @@ public class Interpreter_Visitor {
 			
 			if (!expected_type.equals(value_type[1])) {
 				
-				System.out.println();
-				System.out.println("Expected " + expected_type + " value, instead of " + value_type[1] + " expression");
-				System.exit(1);
+				
 			} else {
 				return value_type;
 			}
 
 		}
-		return new String[] { ""};
+		return new String[] { "exit"};
 	}
 
 	public String[] expressionOperationTraversal(AST node) {
@@ -491,6 +507,7 @@ public class Interpreter_Visitor {
 				return new String[] { getValue(node.value), getType(node.value) };
 			} else if (node.node_type == "FunctionCall") {
 				// function call
+				
 				String value = traverse(node.parentNode, false);
 				
 				return new String[] {value, getType(node.value)};
@@ -761,5 +778,79 @@ public class Interpreter_Visitor {
 
 		return new String[] {""};
 	}
+	
+	
+public int getFunctionNode(AST temp) {
+	
+	
+	
+	if(!checkVariable(temp.value)) {
+		System.out.println("Function with name "+temp.value+" has not been declared yet.");
+		System.exit(1);
+	}
+	//called function exists
+	//check if same number of parameters
+	ArrayList<String> parameter_types = new ArrayList<String>();
+	
+	
+	
+	String[] parameter_type_value;
+	String expected_parameter_type;
+	boolean match = true;
+	int matching_index = 0;
+	
+	for(int j=0; j < function_headers.get(temp.value).size(); j++) {
+		match = true;
+		//check number of arguments first
+		
+	
+		
+		if(function_headers.get(temp.value).get(j).size() != temp.childNodes.size()) {
+			match = false;
+			continue;
+		}
+		
+		if(function_headers.get(temp.value).get(j).size() == temp.childNodes.size() && temp.childNodes.size() == 0) {
+			match = true;
+			matching_index = j;
+		}
+		
+		for(int z = 0; z <temp.childNodes.size(); z++) {
+			
+			
+			expected_parameter_type = function_headers.get(temp.value).get(j).get(z);
+			parameter_type_value = valueCheck(temp.childNodes.get(z), expected_parameter_type);
+			
+			if(parameter_type_value[0] == "exit") {
+				match = false;
+				break;
+			}
+			
+		
+		match = true;
+		matching_index =j;
+		}
+		
+	
+		if(match) {
+			
+	
+			return matching_index;
+		}
+		
+		
+		
+		
+		
+	}
+	if(!match) {
+		System.out.println("Semantic Error, no matching function found for function call of "+temp.value);
+		System.exit(1);
+	}
+	
+	return -1;
+}
+
+	
 
 }

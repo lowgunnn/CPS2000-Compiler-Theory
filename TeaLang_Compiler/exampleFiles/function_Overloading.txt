@@ -1,0 +1,32 @@
+int function(num1:float, nice:string){
+
+print "You have entered the original function";
+
+return 5;
+
+}
+
+float function(num1:float, word:string, nice:string){
+
+print "entered the overloaded function :)";
+
+return num1+num1;
+
+}
+
+float function2(num2:float){
+
+return num2;
+
+}
+
+
+print function( 1.0, "hello", "223.3");
+
+print function( function(1.0, "nice", "nice"), "hello", "223.3");
+
+let x:int = function(1.0, "hello");
+
+
+
+print x;

@@ -1,0 +1,26 @@
+let x:auto = 5;
+
+
+int double(num : int){
+
+return num*num;
+
+}
+
+
+
+
+let y:auto = double( 12);
+
+auto double(word : string){
+
+
+return double(50);
+
+}
+
+
+
+let z:auto = double("nice");
+
+print z;
