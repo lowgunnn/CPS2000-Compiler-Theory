@@ -1,0 +1,16 @@
+
+float Average(toAverage[] : float, count : int){
+
+let total:float = 0.0;
+
+{
+total = total +toAverage[i];
+}
+return total / count;
+}
+
+let arr2[4]:float = {2.4, 2.8, 10.4, 12.1};
+
+print Average(arr2);	
+
+print arr[2]+arr[2*6]+arr[3/5];

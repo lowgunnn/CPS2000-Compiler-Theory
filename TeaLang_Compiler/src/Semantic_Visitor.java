@@ -73,6 +73,14 @@ public class Semantic_Visitor {
 								temp.childNodes.get(1).value = type;
 							}
 						} else {
+							
+							String error =typeCheck(temp.childNodes.get(1), "int");
+							if (error.equals("exit")) {
+								System.out.println("Semantic Error, array must have integer index ");
+								System.exit(1);
+							}
+							
+							
 							//
 							if (!temp.childNodes.get(2).value.equals("auto")) {
 
@@ -82,7 +90,7 @@ public class Semantic_Visitor {
 
 									for (int e = 0; e < temp.childNodes.get(3).childNodes.size(); e++) {
 
-										String error = typeCheck(temp.childNodes.get(3).childNodes.get(e), type);
+										 error = typeCheck(temp.childNodes.get(3).childNodes.get(e), type);
 
 										if (error.equals("exit")) {
 											System.out
@@ -104,6 +112,10 @@ public class Semantic_Visitor {
 								} // uninitialised
 
 							} else {
+								
+								
+								
+								
 
 								if (temp.childNodes.size() != 4
 										|| !temp.childNodes.get(3).node_type.equals("Elements")) {
@@ -116,7 +128,7 @@ public class Semantic_Visitor {
 
 								for (int e = 0; e < temp.childNodes.get(3).childNodes.size(); e++) {
 
-									String error = typeCheck(temp.childNodes.get(3).childNodes.get(e), type);
+									 error = typeCheck(temp.childNodes.get(3).childNodes.get(e), type);
 
 									if (error.equals("exit")) {
 										System.out.println("Semantic Error, array has mismatched elements. Expecting "
@@ -267,11 +279,31 @@ public class Semantic_Visitor {
 						System.out.println("Variable " + temp.childNodes.get(0).value + " has not been declared!");
 						System.exit(1);
 					} else {
+						
+						
+						if(temp.childNodes.get(0).childNodes.size() != 0) {
+							
+							String error =typeCheck(temp.childNodes.get(0).childNodes.get(1), "int");
+							if (error.equals("exit")) {
+								System.out.println("Semantic Error, array must have integer index ");
+								System.exit(1);
+							}
+							
+							String expected_type = getType(temp.childNodes.get(0).value);
 
+							if(typeCheck(temp.childNodes.get(1), expected_type).equals("exit")){
+								System.out.println("Semantic Error, Array element must be set to "+expected_type);
+								System.exit(1);
+							}
+							
+						}else {
 						String expected_type = getType(temp.childNodes.get(0).value);
 
-						typeCheck(temp.childNodes.get(1), expected_type);
-
+						if(typeCheck(temp.childNodes.get(1), expected_type).equals("exit")){
+							System.out.println("Semantic Error, variable "+temp.childNodes.get(1)+" must be set to "+expected_type);
+							System.exit(1);
+						}
+						}
 					}
 
 				} else if (temp.node_type == "PrintStatements") {
