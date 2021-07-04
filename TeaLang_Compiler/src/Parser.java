@@ -93,7 +93,7 @@ public class Parser {
 	public static void parseSyntax(int production_rule, Token current_token, Token next_token, Token next_next_token) {
 
 		boolean op_type;
-		
+		boolean array;
 		
 		
 		// based on the production rule, the contents of the stack are adjusted
@@ -101,7 +101,7 @@ public class Parser {
 
 		case 1:
 			root.addNode("VariableDecl");
-			boolean array = false;
+			 array = false;
 			if (next_next_token.type == "Opening_Square") {
 				array = true;
 			}
@@ -274,6 +274,14 @@ public class Parser {
 				stack.push("ActualParams");
 				stack.push("Opening_Bracket");
 			} else {
+				
+				
+				if(next_token.type == "Opening_Square") {
+					array = true;
+				}else {
+					array = false;
+				}
+				
 				root.addNode("Variable_Identifier", current_token.value);
 				stack.push("SimpleExpression");
 				stack.push("RelationalOp");
@@ -281,6 +289,19 @@ public class Parser {
 				stack.push("AdditiveOp");
 				stack.push("Factor");
 				stack.push("MultiplicativeOp");
+				if(array) {
+					stack.push("Closing_Square");
+					stack.push("Index");
+					stack.push("Opening_Square");
+					root = root.switchRoot(root);
+					
+					if(next_next_token.type != "Closing_Square") {
+						root.addNode("Array_Indexing");
+						root.switchRoot(root);
+						
+						
+					}
+				}
 			}
 
 			break;
@@ -328,6 +349,8 @@ public class Parser {
 
 			break;
 		case 22:
+			
+			
 			if (root.node_type == "ElseBlock") {
 				root = root.parentNode;
 				root = root.parentNode;
@@ -336,8 +359,9 @@ public class Parser {
 				if (root.node_type == "ForLoop" || root.node_type == "WhileLoop" || root.node_type == "FunctionDecl") {
 					root = root.parentNode;
 				}
-				if (root.node_type == "IfStatement" && next_token.type != "Else_Keyowrd") {
+				if (root.node_type == "IfStatements" && next_token.type != "Else_Keyword") {
 					root = root.parentNode;
+					
 				}
 			}
 			stack.pop(); // pops the closing curling bracket
@@ -591,9 +615,27 @@ public class Parser {
 				stack.push("ActualParams");
 				stack.push("Opening_Bracket");
 			} else {
+				
+				if(next_token.type == "Opening_Square") {
+					array = true;
+				}else {
+					array = false;
+				}
+				
 				root.addNode("Variable_Identifier", current_token.value);
 				stack.push("Term");
 				stack.push("AdditiveOp");
+				stack.push("MultiplicativeOp");
+				if(array) {
+					stack.push("Closing_Square");
+					stack.push("Index");
+					stack.push("Opening_Square");
+					
+					if(next_next_token.type != "Closing_Square") {
+						root.addNode("Array_Indexing");
+						root.switchRoot(root);
+					}
+				}
 			}
 
 			break;
@@ -638,6 +680,13 @@ public class Parser {
 				stack.push("ActualParams");
 				stack.push("Opening_Bracket");
 			} else {
+				
+				if(next_token.type == "Opening_Square") {
+					array = true;
+				}else {
+					array = false;
+				}
+				
 				root.addNode("Variable_Identifier", current_token.value);
 				stack.push("SimpleExpression");
 				stack.push("RelationalOp");
@@ -645,6 +694,18 @@ public class Parser {
 				stack.push("AdditiveOp");
 				stack.push("Factor");
 				stack.push("MultiplicativeOp");
+				if(array) {
+					stack.push("Closing_Square");
+					stack.push("Index");
+					stack.push("Opening_Square");
+					root = root.switchRoot(root);
+					
+					if(next_next_token.type != "Closing_Square") {
+						root.addNode("Array_Indexing");
+						root.switchRoot(root);
+						
+					}
+				}
 			}
 
 			break;
@@ -842,12 +903,28 @@ public class Parser {
 			}
 			stack.pop();
 			
+			
+			
 			root=root.expressionEscape(root);
+			
+			
+			System.out.println(root.node_type);
+			
+			
 			if(root.childNodes.get(root.childNodes.size()-1).node_type != "Variable_Identifier") {
-			root = root.operatorSwitch(root, "*");
+		
+			/*root = root.operatorSwitch(root, "*");
 			root.node_type = "Array_Indexing";
-			root.value = null;
-			root = root.parentNode;
+			root.value = null;*/
+			
+		
+			
+			
+			if(root.node_type == "Variable_Identifier") {
+				root = root.parentNode;
+			}
+			
+			
 			}else {
 				root.addNode("Array_Indexing");
 			}

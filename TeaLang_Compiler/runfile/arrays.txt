@@ -1,0 +1,43 @@
+auto XgreaterY(toCompare[] : int){
+
+let ans:auto = false;
+
+if(toCompare[0] > toCompare[1])
+{
+
+ans = true;
+
+}
+return ans;
+}
+/*
+auto XgreaterY(x : int, y: int){
+
+if (x>y){ return true;} else { return false;}
+
+}
+
+float Average(toAverage[] : float, count : int){
+
+let total:float = 0.0;
+
+{
+total = total +toAverage[i];
+}
+return total / count;
+}
+*/
+let arr1[2]:float;
+
+let arr2[4]:float = {2.4, 2.8, 10.4, 12.1};
+
+arr1[0] = 22.4;
+arr1[1] = 6.25;
+
+print arr1[1];
+
+print XGreaterY(arr1);
+print Average(arr2);	
+print XGreaterY(2,3);
+
+
