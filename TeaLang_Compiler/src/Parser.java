@@ -378,12 +378,34 @@ public class Parser {
 			// used for one-off declarations like in for loop variable declarations
 			root.addNode("VariableDecl");
 			root = root.switchRoot(root);
+			
+			if(next_next_token.type == "Opening_Square") {
+				array = true;
+			}else {
+				array = false;
+			}
+			
+			if (array) {
+				stack.push("Statement");
+				stack.push("ArrayAssignment");
+				stack.push("Type");
+				stack.push("Colon");
+				stack.push("Closing_Square");
+				stack.push("Expression");
+				stack.push("Opening_Square");
+				stack.push("Variable_Identifier");
+			}
+			else {
+			
 			stack.push("Semi_Colon");
 			stack.push("Expression");
 			stack.push("Equals");
 			stack.push("Type");
 			stack.push("Colon");
 			stack.push("Variable_Identifier");
+			
+			}
+			
 			break;
 		case 26:
 			// variable assignment -> onestament ma nax kif insejta din lol
@@ -407,9 +429,16 @@ public class Parser {
 				
 				
 				if(next_token.type.equals("Opening_Square")) {
+					root = root.switchRoot(root);
 					stack.push("Closing_Square");
 					stack.push("Index"); //can be non
 					stack.push("Opening_Square");
+					
+					if(next_next_token.type != "Closing_Square") {
+						root.addNode("Array_Indexing");
+						
+					}
+					
 				}
 				
 			} else {
@@ -625,6 +654,7 @@ public class Parser {
 				root.addNode("Variable_Identifier", current_token.value);
 				stack.push("Term");
 				stack.push("AdditiveOp");
+				stack.push("Factor");
 				stack.push("MultiplicativeOp");
 				if(array) {
 					stack.push("Closing_Square");
