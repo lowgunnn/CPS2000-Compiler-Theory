@@ -92,6 +92,7 @@ public class Token {
 			
 			switch(lexeme) {
 			
+		
 			case ";":
 				return "Semi_Colon";
 			case ":":
@@ -119,6 +120,10 @@ public class Token {
 			
 		case 25:
 			return "Char_Value";
+			
+		case 26:
+		case 27:
+			return "Struct_Identifier";
 		
 		default:
 			System.out.println("Unexpected Token Type Encountered!!");

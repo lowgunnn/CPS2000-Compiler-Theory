@@ -1,25 +1,25 @@
-let num : int = 23;
+tlstruct Vector {
 
-let chara : char = '2';
+let x:float = 0.0;
 
-char n(x:char ){
+int Scale(s : float){
 
-print '2';
-
-return x;
+x = x*s;
+return 0;
+}
 
 }
 
+let v1:Vector:
+v1.x = 1.0;
 
-n('2', '4'=='2', '{'*'3', '5'+'4');
+let v2:Vector = getVector(v1);
 
+v1.Scale(5.0);
 
-let automatic : auto = 123;
+let arr[2]:float;
 
-auto f(x:char){
+let arr[3]:float = { 1.2, 2.3, 4.5, 5.6};
 
-let z:auto = 123;
-
-return z;
-
-}
+arr[0] = 2.3;
+arr = {2.3};
