@@ -433,6 +433,7 @@ public class Parser {
 					stack.push("Closing_Square");
 					stack.push("Index"); //can be non
 					stack.push("Opening_Square");
+					root = root.switchRoot(root);
 					
 					if(next_next_token.type != "Closing_Square") {
 						root.addNode("Array_Indexing");
@@ -660,6 +661,7 @@ public class Parser {
 					stack.push("Closing_Square");
 					stack.push("Index");
 					stack.push("Opening_Square");
+					root = root.switchRoot(root);
 					
 					if(next_next_token.type != "Closing_Square") {
 						root.addNode("Array_Indexing");

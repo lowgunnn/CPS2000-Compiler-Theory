@@ -1,5 +1,6 @@
 import java.util.*;
 
+
 public class Semantic_Visitor {
 
 	static Stack<Map<String, String>> symbol_table = new Stack<Map<String, String>>();
@@ -177,7 +178,7 @@ public class Semantic_Visitor {
 
 						symbol_table.get(symbol_table.size() - 1).put(temp.childNodes.get(1).value,
 								temp.childNodes.get(0).value);
-
+						System.out.println("Symbol "+symbol_table);
 						function_returns.get(temp.childNodes.get(1).value).add(temp.childNodes.get(0).value);
 						System.out.println("Returns for a function" + function_returns);
 
@@ -194,6 +195,8 @@ public class Semantic_Visitor {
 						System.out.println(function_headers);
 
 						symbol_table.pop();
+						
+						
 					}
 				} else if (temp.node_type == "ReturnStatement") {
 
