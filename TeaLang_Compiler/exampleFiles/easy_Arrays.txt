@@ -1,0 +1,22 @@
+let arr2[4]:float = {2.4, 2.8, 10.4, 12.1};
+
+arr2[1] = 12.7;
+
+
+float Average(toAverage[] : float, count : float){
+
+let total:float = 0.0;
+
+for(let i:float =0.0; i < count; i = i + 1.0;)
+{
+total = total +toAverage[1];
+}
+return toAverage[2];
+}
+
+let arr4[4]:float = {02.4, 34.3, 23.4, 99.3};
+
+print Average(arr4[2], 4.0);	
+
+
+

@@ -19,17 +19,24 @@ public class Interpreter_Visitor {
 	static Map<String, ArrayList<ArrayList<String>>> function_headers = new LinkedHashMap<String, ArrayList<ArrayList<String>>>();
 	static Map<String, ArrayList<String>> function_returns = new LinkedHashMap<String, ArrayList<String>>();
 	
-
+	static Stack< ArrayList<String>> array_table = new Stack<ArrayList<String>>();
+	static Stack<Map<String, ArrayList<String>>> array_values = new Stack<Map<String, ArrayList<String>>>();
+	
 	public String traverse(AST root, boolean create_scope) {
 		
 		
 		
 		Map<String, String> map = new LinkedHashMap<String, String>();
 		Map<String, String> map2 = new LinkedHashMap<String, String>();
+		Map<String, ArrayList<String>> map3 = new LinkedHashMap<String, ArrayList<String>>();
+	
+		
 		// preferable from ordinary maps, so we can preserve the order of inserted keys.
 		if(create_scope) {
 		symbol_table.push(map);
 		value_table.push(map2);
+		array_table.push(new ArrayList<String>());
+		array_values.push(map3);
 		}
 		AST temp;
 
@@ -51,6 +58,48 @@ public class Interpreter_Visitor {
 								"Semantic Error, variable " + temp.childNodes.get(0).value + " already exists!");
 						System.exit(1);
 					} else {
+						
+						if(temp.childNodes.get(0).childNodes.size()!= 0) {
+							//arrays
+							
+							array_table.get(array_table.size()-1).add(temp.childNodes.get(0).value);
+							System.out.println(array_table);
+							
+							String[] size_type;
+							
+							size_type = valueCheck(temp.childNodes.get(1), "int");
+							 int size = Integer.valueOf(size_type[0]);
+							
+							
+							array_values.peek().put(temp.childNodes.get(0).value, new ArrayList<String>());
+							
+							if(temp.childNodes.size()!= 3) {
+								
+								if(temp.childNodes.get(3).childNodes.size() > size) {
+									System.out.println("Runtime Error, Initialised Array exceeds bounds");
+									System.exit(1);
+								}
+								
+								for(int index = 0; index <temp.childNodes.get(3).childNodes.size(); index++ ) {
+									
+									String[] element_value_type = valueCheck(temp.childNodes.get(3).childNodes.get(index), temp.childNodes.get(2).value);
+									
+									//System.out.println(element_value_type[0]);
+									
+									array_values.peek().get(temp.childNodes.get(0).value).add( element_value_type[0]);
+								}
+								
+							}
+							
+							//symbol_table.peek().put(temp.childNodes.get(0).value, temp.childNodes.get(2).value);
+							
+							symbol_table.get(symbol_table.size() - 1).put(temp.childNodes.get(0).value,
+									temp.childNodes.get(2).value);
+							System.out.println(array_values);
+						}
+						else {
+						
+						
 
 						// type check before so we dont get, let x:int = x;
 						String[] value_type = valueCheck(temp.childNodes.get(2), temp.childNodes.get(1).value);
@@ -65,7 +114,7 @@ public class Interpreter_Visitor {
 
 						continue;
 					}
-
+					}
 				}else if(temp.node_type == "IfStatements") {
 					
 				
@@ -145,7 +194,9 @@ public class Interpreter_Visitor {
 
 					symbol_table.pop();
 					value_table.pop();
-
+					array_table.pop();
+					array_values.pop();
+					
 				} else if (temp.node_type == "FunctionDecl") {
 						
 					if (checkVariable(temp.childNodes.get(1).value)) {
@@ -175,6 +226,8 @@ public class Interpreter_Visitor {
 
 						symbol_table.pop();
 						value_table.pop();
+						array_table.pop();
+						array_values.pop();
 					
 				} else if (temp.node_type == "ReturnStatement") {
 
@@ -204,7 +257,7 @@ public class Interpreter_Visitor {
 						//this.traverse(temp);
 					
 
-					
+					break;
 				}
 
 				else if (temp.node_type == "FormalParams") {

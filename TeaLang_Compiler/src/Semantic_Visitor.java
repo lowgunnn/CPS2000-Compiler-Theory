@@ -8,7 +8,7 @@ public class Semantic_Visitor {
 	static Map<String, ArrayList<ArrayList<String>>> function_headers = new LinkedHashMap<String, ArrayList<ArrayList<String>>>();
 	static Map<String, ArrayList<String>> function_returns = new LinkedHashMap<String, ArrayList<String>>();
 	
-	static Map<String, ArrayList<String>> arrays = new LinkedHashMap<String, ArrayList<String>>();
+	static ArrayList<ArrayList<String>> arrays = new  ArrayList<ArrayList<String>>();
 	
 	
 	public String traverse(AST root) {
@@ -16,7 +16,7 @@ public class Semantic_Visitor {
 		Map<String, String> map = new LinkedHashMap<String, String>();
 		// preferable from ordinary maps, so we can preserve the order of inserted keys.
 		symbol_table.push(map);
-
+		arrays.add(new ArrayList<String>());
 		AST temp;
 
 		if (root.childNodes.size() == 0) {
@@ -143,6 +143,10 @@ public class Semantic_Visitor {
 								temp.childNodes.get(2).value = type;
 
 							}
+							
+							//add array to current scope of arrays.
+						
+						arrays.get(arrays.size()-1).add(temp.childNodes.get(0).value);
 						}
 						// Evaluate Expression Type
 
@@ -161,6 +165,7 @@ public class Semantic_Visitor {
 
 					this.traverse(temp);
 					symbol_table.pop();
+					arrays.remove(arrays.size()-1);
 
 				} else if (temp.node_type == "FunctionDecl") {
 
@@ -190,8 +195,9 @@ public class Semantic_Visitor {
 						function_headers.put(temp.childNodes.get(1).value, overloaders);
 
 						System.out.println(function_headers);
-
+						System.out.println(arrays);
 						this.traverse(temp);
+						arrays.remove(arrays.size()-1);
 						System.out.println(function_headers);
 
 						symbol_table.pop();
@@ -261,6 +267,14 @@ public class Semantic_Visitor {
 
 							symbol_table.get(symbol_table.size() - 1).put(temp.childNodes.get(j).value,
 									temp.childNodes.get(j + 1).value);
+						
+							
+							if(temp.childNodes.get(j).childNodes.size() != 0) {
+								arrays.get(arrays.size()-1).add(temp.childNodes.get(j).value);
+								System.out.println(arrays);
+							}
+							
+						
 						}
 					}
 
@@ -624,6 +638,16 @@ public class Semantic_Visitor {
 			}
 
 		} else if (node.childNodes.size() == 2) {
+			
+			
+			
+			if(node.childNodes.get(0).node_type == "Array_Indexing") {
+			
+				return getType(node.value);
+				
+			}
+			
+			
 			String type1 = expressionOperationTraversal(node.childNodes.get(0));
 			String type2 = expressionOperationTraversal(node.childNodes.get(1));
 
