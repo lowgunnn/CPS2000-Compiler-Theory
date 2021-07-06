@@ -363,6 +363,12 @@ public class Parser {
 					root = root.parentNode;
 					
 				}
+				if(root.node_type == "Block" && root.parentNode.node_type == "FunctionDecl" && root.childNodes.get(root.childNodes.size()-1).node_type == "ReturnStatement") {
+					root = root.parentNode.parentNode;
+				}
+				
+				
+				
 			}
 			stack.pop(); // pops the closing curling bracket
 			System.out.println("EXITTED BLOCK~~~~~~~~~~~~~~~~~~~~~~~");
@@ -973,7 +979,7 @@ public class Parser {
 			
 			
 			}else {
-				root.addNode("Array_Indexing");
+			//	root.addNode("Array_Indexing");
 			}
 			
 			break;

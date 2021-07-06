@@ -201,11 +201,14 @@ public class Interpreter_Visitor {
 
 				this.traverse(temp, true);
 
+				
+				
 				symbol_table.pop();
 				value_table.pop();
 				array_table.pop();
 				array_values.pop();
-
+			
+			
 			} else if (temp.node_type == "ReturnStatement") {
 
 				// evaluate the expression, check if it matches with the last declared
@@ -227,7 +230,7 @@ public class Interpreter_Visitor {
 				String[] key_value = valueCheck(temp.childNodes.get(0), expected_type);
 
 				// System.out.println(key_value[0]);
-
+				
 				last_return = key_value[0];
 
 				// this.traverse(temp);
@@ -263,7 +266,7 @@ public class Interpreter_Visitor {
 				}
 
 				// ADD FUNCTION SIGNATURES HERE
-
+				
 			} else if (temp.node_type == "VariableAssignment") {
 
 				if (!checkVariable(temp.childNodes.get(0).value)) {
@@ -322,6 +325,7 @@ public class Interpreter_Visitor {
 				case "String_Value":
 				case "True_Keyword":
 				case "False_Keyword":
+				case "Char_Value":
 					System.out.println(temp.childNodes.get(0).value);
 					break;
 
@@ -515,7 +519,9 @@ public class Interpreter_Visitor {
 		if (checkVariable(variable_identifier)) {
 
 			String variable_type = getType(variable_identifier);
-
+			
+			
+			
 			if (!expected_return.equals(variable_type)) {
 				System.out.println("Semamtic Error, identifier expects " + expected_return + " return, instead got "
 						+ variable_type + " from " + variable_identifier);
@@ -536,9 +542,15 @@ public class Interpreter_Visitor {
 	public String[] valueCheck(AST node, String expected_type) {
 
 		if (node.node_type == "Variable_Identifier") {
-
+			
+			if(node.childNodes.size()!=0) {
+				
+				String value = getArrayValue(node);
+				return new String[] {value, getType(node.value) };
+			}else {
+			
 			return new String[] { getValue(node.value), getType(node.value) };
-
+			}
 		} else if (node.node_type == "FunctionCall") {
 
 			String value = traverse(node.parentNode, false);
@@ -547,7 +559,7 @@ public class Interpreter_Visitor {
 
 		} else if (node.node_type == "Integer_Value" || node.node_type == "Float_Value"
 				|| node.node_type == "String_Value" || node.node_type == "True_Keyword"
-				|| node.node_type == "False_Keyword") {
+				|| node.node_type == "False_Keyword" || node.node_type == "Char_Value") {
 
 			switch (node.node_type) {
 
@@ -576,6 +588,13 @@ public class Interpreter_Visitor {
 			case "False_Keyword":
 				if (expected_type.equals("bool")) {
 					return new String[] { node.value, "bool" };
+				} else {
+
+				}
+				
+			case "Char_Value":
+				if (expected_type.equals("char")) {
+					return new String[] { node.value, "char" };
 				} else {
 
 				}
@@ -627,6 +646,10 @@ public class Interpreter_Visitor {
 				case "True_Keyword":
 				case "False_Keyword":
 					return new String[] { node.value, "bool" };
+					
+				case "Char_Value":
+
+					return new String[] { node.value, "char" };
 
 				}
 

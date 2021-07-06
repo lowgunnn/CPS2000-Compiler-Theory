@@ -29,8 +29,13 @@ public class Semantic_Visitor {
 			} else {
 
 			}
-
+			System.out.println("DECLARED FUNCTIONS :"+function_headers);
 			for (int i = 0; i < root.childNodes.size(); i++) {
+				
+				
+				System.out.println("CURRENT SCOPE :"+symbol_table);
+				System.out.println("ARRAYS IN SCOPE: "+arrays);
+				
 
 				temp = root.childNodes.get(i);
 
@@ -290,6 +295,8 @@ public class Semantic_Visitor {
 
 					// ADD FUNCTION SIGNATURES HERE
 
+					
+					
 				} else if (temp.node_type == "VariableAssignment") {
 
 					if (!checkVariable(temp.childNodes.get(0).value)) {
@@ -332,6 +339,7 @@ public class Semantic_Visitor {
 					case "String_Value":
 					case "True_Keyword":
 					case "False_Keyword":
+					case "Char_Value":
 						break;
 
 					case "Variable_Identifier":
@@ -376,7 +384,7 @@ public class Semantic_Visitor {
 						match = true;
 						// check number of arguments first
 
-						System.out.println("EYYYYOOO " + function_headers.get(temp.value).get(j));
+					
 
 						if (function_headers.get(temp.value).get(j).size() != temp.childNodes.size()) {
 							match = false;
@@ -465,7 +473,9 @@ public class Semantic_Visitor {
 	}
 
 	public String getType(String variable_identifier) {
-
+		
+		
+		
 		for (int i = 0; i < symbol_table.size(); i++) {
 
 			if (symbol_table.get(i).containsKey(variable_identifier)) {
@@ -483,6 +493,8 @@ public class Semantic_Visitor {
 
 			String variable_type = getType(variable_identifier);
 
+			
+			
 			if (!expected_return.equals(variable_type)) {
 				System.out.println("Semamtic Error, identifier expects " + expected_return + " return, instead got "
 						+ variable_type + " from " + variable_identifier);
@@ -508,7 +520,9 @@ public class Semantic_Visitor {
 		}
 
 		if (node.node_type == "Variable_Identifier") {
-
+			
+			
+			
 			return evaluateVariable(node.value, expected_type);
 
 		} else if (node.node_type == "FunctionCall") {
@@ -529,7 +543,7 @@ public class Semantic_Visitor {
 
 		else if (node.node_type == "Integer_Value" || node.node_type == "Float_Value"
 				|| node.node_type == "String_Value" || node.node_type == "True_Keyword"
-				|| node.node_type == "False_Keyword") {
+				|| node.node_type == "False_Keyword" || node.node_type == "Char_Value") {
 
 			switch (node.node_type) {
 
@@ -564,6 +578,16 @@ public class Semantic_Visitor {
 					return "bool";
 				} else {
 					System.out.println("Expected " + expected_type + " value, instead of bool literal");
+					return "exit";
+				}
+				
+			case "Char_Value":
+				if (expected_type.equals("char")) {
+					return "char";
+				} else {
+					
+					
+					System.out.println("Expected " + expected_type + " value, instead of char literal");
 					return "exit";
 				}
 
@@ -632,7 +656,9 @@ public class Semantic_Visitor {
 				case "True_Keyword":
 				case "False_Keyword":
 					return "bool";
-
+					
+				case "Char_Value":
+					return "char";
 				}
 
 			}

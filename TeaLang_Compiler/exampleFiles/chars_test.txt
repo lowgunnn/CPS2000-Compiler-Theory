@@ -1,0 +1,22 @@
+
+let x:char = 'e';
+
+let y:char = x;
+
+
+char checkCharacter( array[] : char, length : int){
+
+return array[length];
+
+
+}
+
+
+print y;
+
+let charArray[6]:char = { 'a','b','c','d','e','f'};
+
+print charArray;
+
+print "The below function returns the char at the spcified index";
+print checkCharacter(charArray, 3);
