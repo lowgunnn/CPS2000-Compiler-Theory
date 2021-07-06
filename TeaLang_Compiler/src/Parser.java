@@ -1,5 +1,7 @@
 import java.util.*;
 
+
+
 public class Parser {
 
 	static AST root = new AST("ProgramNode");
@@ -51,17 +53,17 @@ public class Parser {
 			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 11, 11, 11, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 					0, 11, 0, 0, 0, 0, 0 }, // literal
 			{ 0, 0, 0, 0, 0, 0, 0, 13, 0, 60, 0, 0, 0, 0, 0, 0, 0, 0, 12, 11, 11, 11, 11, 11, 14, 0, 0, 0, 0, 0, 0, 14,
-					0, 0, 0, 11, 0, 0, 0, 0, 66 }, // expression
+					0, 0, 0, 11, 0, 0, 0, 0, 12 }, // expression
 			{ 0, 0, 0, 0, 0, 0, 0, 43, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 42, 41, 41, 41, 41, 41, 44, 0, 0, 0, 0, 0, 0, 44,
-					0, 0, 0, 41, 0, 0, 0, 0, 66 }, // simple expression
+					0, 0, 0, 41, 0, 0, 0, 0, 42 }, // simple expression
 			{ 0, 0, 0, 32, 0, 0, 0, 0, 55, 0, 59, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 46, 46, 46, 47, 17, 17, 47,
 					0, 32, 0, 0, 0, 0, 56, 0, 0 }, // relationalOp
 			{ 0, 0, 0, 0, 0, 0, 0, 39, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 38, 37, 37, 37, 37, 37, 40, 0, 0, 0, 0, 0, 0, 40,
-					0, 37, 0, 37, 0, 0, 0, 0, 66 }, // Term
+					0, 37, 0, 37, 0, 0, 0, 0, 38 }, // Term
 			{ 0, 0, 0, 31, 0, 0, 0, 0, 54, 0, 59, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 45, 45, 45, 17, 32, 32, 17,
 					31, 0, 0, 0, 0, 0, 56, 0, 0}, // additiveOp
 			{ 0, 0, 0, 0, 0, 0, 0, 35, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 33, 33, 33, 33, 33, 36, 0, 0, 0, 0, 0, 0, 36,
-					0, 0, 0, 33, 0, 0, 0 ,66 }, // Factor
+					0, 0, 0, 33, 0, 0, 0 ,34 }, // Factor
 			{ 0, 0, 0, 30, 0, 0, 0, 0, 53, 0, 59, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 17, 17, 17, 32, 31, 31, 32,
 					0, 30, 0, 0, 0, 0, 56, 0 ,0 }, // MultipilicatievOp
 			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -207,7 +209,9 @@ public class Parser {
 			}
 			root = root.switchRoot(root);
 			System.out.println("ENTERED BLOCK");
+			if(stack.peek()!="Statement") {
 			stack.push("Statement");
+			}
 			stack.push("Closing_Curly");
 			stack.push("Statement");
 			break;
@@ -234,7 +238,7 @@ public class Parser {
 				System.exit(1);
 			}
 			
-			if(current_token.type.equals("Variable_Identifier") && next_token.type.equals("Colon")) {
+			if(current_token.type.equals("Variable_Identifier") && (next_token.type.equals("Colon") || next_token.type.equals("Semi_Colon") )) {
 				stack.pop();
 				stack.pop();
 				stack.pop();
@@ -417,20 +421,25 @@ public class Parser {
 			// variable assignment -> onestament ma nax kif insejta din lol
 			if (next_token.type != "Opening_Bracket") {
 				
-				
+				if(next_next_token.type!= "Opening_Bracket") {
 				root.addNode("VariableAssignment");
 				root = root.switchRoot(root);
 			
 				root.addNode("Variable_Identifier", current_token.value);
+				}
+				
 				stack.push("Statement");
 				
 				if(next_token.type.equals("Opening_Square")) {
 					stack.push("ArrayAssignment");
 				}
 				else {
+					
+					if(next_next_token.type != "Opening_Bracket") {
 					stack.push("Semi_Colon");
 					stack.push("Expression");
 					stack.push("Equals");
+					}
 				}
 				
 				
@@ -459,6 +468,21 @@ public class Parser {
 				stack.push("ActualParams");
 				stack.push("Opening_Bracket");
 			}
+			
+			if(next_token.type == "Variable_Identifier" && next_next_token.type == "Opening_Bracket") {
+				
+				root.addNode("FunctionDecl", next_token.value);
+				root = root.switchRoot(root);
+				
+				stack.push("Block");
+				stack.push("Closing_Bracket");
+				stack.push("Params");
+				stack.push("Opening_Bracket");
+				stack.push("Variable_Identifier");
+				root.addNode("Type",current_token.value);
+				
+			}
+			
 			break;
 		case 27:
 			root.addNode("VariableAssignment");
@@ -1051,10 +1075,25 @@ public class Parser {
 				stack.push("Equals");
 			}
 			break;
+		
+		case 66:
+			
+			
+			
+			if(next_token.type == "Opening_Bracket") {
+				stack.push("Closing_Bracket");
+				stack.push("ActualParams");
+				stack.push("Opening_Bracket");
+			}
+			
+		
 		case 67:
 			stack.pop();
 			root = root.parentNode;
 			break;
+			
+		
+			
 			
 		case 68:
 			
@@ -1122,7 +1161,12 @@ public class Parser {
 
 				}
 
-				if (last_terminal == "Variable_Identifier") {
+				if(last_terminal == "Variable_Identifier" && stack.peek() == "FunctionDecl") {
+					root.addNode(current_token.type, current_token.value);
+				}
+				
+				
+				else if (last_terminal == "Variable_Identifier" && stack.peek()!= "FunctionDecl") {
 					root.addNode(current_token.type, current_token.value);
 					
 					if(stack.peek() == "Opening_Square" && next_token.type == "Opening_Square" ) {

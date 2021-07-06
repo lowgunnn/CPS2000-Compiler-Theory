@@ -1,0 +1,27 @@
+tlstruct Vector{
+
+let x:float = 0.0;
+let y:float = 0.0;
+let z:float = 0.0;
+
+int Translate(tx : float, ty : float, tz : float){
+
+x = x+tx;
+y = y+ty;
+z = z+tz;
+
+return 0;
+
+}
+}
+
+Vector addVector( v1:Vector, v2:Vector){
+
+let v3:Vector;
+v3.x = v1.x+v2.x;
+v3.y = v1.y+v2.y;
+v3.z = v1.z+v2.z;
+
+return v3;
+
+}	
