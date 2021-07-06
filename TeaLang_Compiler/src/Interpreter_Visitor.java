@@ -952,7 +952,7 @@ public class Interpreter_Visitor {
 					break;
 				}
 
-				if (temp.childNodes.get(z).childNodes.size() != 0) {
+				if (checkArray(temp.childNodes.get(z).value) && temp.childNodes.get(z).childNodes.size() != 0) {
 
 					index_type = valueCheck(temp.childNodes.get(z).childNodes.get(1), "int");
 					index = Integer.valueOf(index_type[0]);
