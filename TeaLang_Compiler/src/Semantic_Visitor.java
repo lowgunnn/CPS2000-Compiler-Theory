@@ -1,16 +1,20 @@
 import java.util.*;
 
-
 public class Semantic_Visitor {
 
 	static Stack<Map<String, String>> symbol_table = new Stack<Map<String, String>>();
 
 	static Map<String, ArrayList<ArrayList<String>>> function_headers = new LinkedHashMap<String, ArrayList<ArrayList<String>>>();
 	static Map<String, ArrayList<String>> function_returns = new LinkedHashMap<String, ArrayList<String>>();
-	
-	static ArrayList<ArrayList<String>> arrays = new  ArrayList<ArrayList<String>>();
-	
-	
+
+	static ArrayList<ArrayList<String>> arrays = new ArrayList<ArrayList<String>>();
+
+	static ArrayList<String> created_Structs = new ArrayList<String>();
+	static Map<String, Map<String, String>> struct_symbols = new LinkedHashMap<String, Map<String, String>>();
+
+	static Map<String, Map<String, ArrayList<String>>> struct_functions = new LinkedHashMap<String, Map<String, ArrayList<String>>>();
+	static Map<String, Map<String, ArrayList<String>>> struct_function_returns = new LinkedHashMap<String, Map<String, ArrayList<String>>>();
+
 	public String traverse(AST root) {
 
 		Map<String, String> map = new LinkedHashMap<String, String>();
@@ -29,17 +33,68 @@ public class Semantic_Visitor {
 			} else {
 
 			}
-			System.out.println("DECLARED FUNCTIONS :"+function_headers);
+			System.out.println("DECLARED FUNCTIONS :" + function_headers);
 			for (int i = 0; i < root.childNodes.size(); i++) {
-				
-				
-				System.out.println("CURRENT SCOPE :"+symbol_table);
-				System.out.println("ARRAYS IN SCOPE: "+arrays);
-				
+
+				System.out.println("CURRENT SCOPE :" + symbol_table);
+				System.out.println("ARRAYS IN SCOPE: " + arrays);
 
 				temp = root.childNodes.get(i);
 
-				if (temp.node_type == "VariableDecl") {
+				if (temp.node_type == "Struct_Decleration") {
+
+					created_Structs.add(temp.childNodes.get(0).value);
+					struct_symbols.put(temp.childNodes.get(0).value, map);
+
+					struct_functions.put(temp.childNodes.get(0).value, new LinkedHashMap<String, ArrayList<String>>());
+					struct_function_returns.put(temp.childNodes.get(0).value,
+							new LinkedHashMap<String, ArrayList<String>>());
+
+					for (int n = 1; n < temp.childNodes.size(); n++) {
+
+						if (temp.childNodes.get(n).node_type == "VariableDecl") {
+
+							if (struct_symbols.get(temp.childNodes.get(0).value)
+									.containsKey(temp.childNodes.get(n).childNodes.get(0).value)) {
+								System.out.println("STRUCT VARIABLE ALREADY EXISTS!");
+								System.exit(1);
+							}
+
+							struct_symbols.get(temp.childNodes.get(0).value).put(
+									temp.childNodes.get(n).childNodes.get(0).value,
+									temp.childNodes.get(n).childNodes.get(1).value);
+
+						} else {
+
+							ArrayList<String> params = new ArrayList<String>();
+
+							for (int param = 1; param < temp.childNodes.get(n).childNodes.get(2).childNodes
+									.size(); param += 2) {
+								params.add(temp.childNodes.get(n).childNodes.get(2).childNodes.get(param).value);
+							}
+							
+							if((struct_functions.get(temp.childNodes.get(0).value).get(temp.childNodes.get(n)).size() != 0)){
+							if (struct_functions.get(temp.childNodes.get(0).value).get(temp.childNodes.get(n))
+									.contains(params)) {
+								System.out.println("STRUCT FUNCTION WITH SAME FUNCTION HEADER ALREADY EXISTS");
+							}
+							}else {
+								struct_functions.get(temp.childNodes.get(0).value).put(temp.childNodes.get(n).childNodes.get(1).value, new ArrayList<String>());
+							}
+							struct_functions.get(temp.childNodes.get(0).value)
+									.put(temp.childNodes.get(n).childNodes.get(1).value, params);
+							struct_function_returns.get(temp.childNodes.get(0).value)
+									.get(temp.childNodes.get(n).childNodes.get(1).value)
+									.add(temp.childNodes.get(n).childNodes.get(0).value);
+
+							System.out.println("???????"+function_returns);
+						}
+
+					}
+
+				}
+
+				else if (temp.node_type == "VariableDecl") {
 
 					if (checkVariable(temp.childNodes.get(0).value)) {
 						System.out.println(
@@ -79,14 +134,13 @@ public class Semantic_Visitor {
 								temp.childNodes.get(1).value = type;
 							}
 						} else {
-							
-							String error =typeCheck(temp.childNodes.get(1), "int");
+
+							String error = typeCheck(temp.childNodes.get(1), "int");
 							if (error.equals("exit")) {
 								System.out.println("Semantic Error, array must have integer index ");
 								System.exit(1);
 							}
-							
-							
+
 							//
 							if (!temp.childNodes.get(2).value.equals("auto")) {
 
@@ -96,7 +150,7 @@ public class Semantic_Visitor {
 
 									for (int e = 0; e < temp.childNodes.get(3).childNodes.size(); e++) {
 
-										 error = typeCheck(temp.childNodes.get(3).childNodes.get(e), type);
+										error = typeCheck(temp.childNodes.get(3).childNodes.get(e), type);
 
 										if (error.equals("exit")) {
 											System.out
@@ -107,21 +161,14 @@ public class Semantic_Visitor {
 									}
 									symbol_table.get(symbol_table.size() - 1).put(temp.childNodes.get(0).value, type);
 
-									
-
 								} else {
-									
-									
+
 									symbol_table.get(symbol_table.size() - 1).put(temp.childNodes.get(0).value,
 											temp.childNodes.get(2).value);
 
 								} // uninitialised
 
 							} else {
-								
-								
-								
-								
 
 								if (temp.childNodes.size() != 4
 										|| !temp.childNodes.get(3).node_type.equals("Elements")) {
@@ -134,7 +181,7 @@ public class Semantic_Visitor {
 
 								for (int e = 0; e < temp.childNodes.get(3).childNodes.size(); e++) {
 
-									 error = typeCheck(temp.childNodes.get(3).childNodes.get(e), type);
+									error = typeCheck(temp.childNodes.get(3).childNodes.get(e), type);
 
 									if (error.equals("exit")) {
 										System.out.println("Semantic Error, array has mismatched elements. Expecting "
@@ -148,10 +195,10 @@ public class Semantic_Visitor {
 								temp.childNodes.get(2).value = type;
 
 							}
-							
-							//add array to current scope of arrays.
-						
-						arrays.get(arrays.size()-1).add(temp.childNodes.get(0).value);
+
+							// add array to current scope of arrays.
+
+							arrays.get(arrays.size() - 1).add(temp.childNodes.get(0).value);
 						}
 						// Evaluate Expression Type
 
@@ -170,7 +217,7 @@ public class Semantic_Visitor {
 
 					this.traverse(temp);
 					symbol_table.pop();
-					arrays.remove(arrays.size()-1);
+					arrays.remove(arrays.size() - 1);
 
 				} else if (temp.node_type == "FunctionDecl") {
 
@@ -188,7 +235,7 @@ public class Semantic_Visitor {
 
 						symbol_table.get(symbol_table.size() - 1).put(temp.childNodes.get(1).value,
 								temp.childNodes.get(0).value);
-						System.out.println("Symbol "+symbol_table);
+						System.out.println("Symbol " + symbol_table);
 						function_returns.get(temp.childNodes.get(1).value).add(temp.childNodes.get(0).value);
 						System.out.println("Returns for a function" + function_returns);
 
@@ -202,12 +249,11 @@ public class Semantic_Visitor {
 						System.out.println(function_headers);
 						System.out.println(arrays);
 						this.traverse(temp);
-						arrays.remove(arrays.size()-1);
+						arrays.remove(arrays.size() - 1);
 						System.out.println(function_headers);
 
 						symbol_table.pop();
-						
-						
+
 					}
 				} else if (temp.node_type == "ReturnStatement") {
 
@@ -272,14 +318,12 @@ public class Semantic_Visitor {
 
 							symbol_table.get(symbol_table.size() - 1).put(temp.childNodes.get(j).value,
 									temp.childNodes.get(j + 1).value);
-						
-							
-							if(temp.childNodes.get(j).childNodes.size() != 0) {
-								arrays.get(arrays.size()-1).add(temp.childNodes.get(j).value);
+
+							if (temp.childNodes.get(j).childNodes.size() != 0) {
+								arrays.get(arrays.size() - 1).add(temp.childNodes.get(j).value);
 								System.out.println(arrays);
 							}
-							
-						
+
 						}
 					}
 
@@ -295,38 +339,36 @@ public class Semantic_Visitor {
 
 					// ADD FUNCTION SIGNATURES HERE
 
-					
-					
 				} else if (temp.node_type == "VariableAssignment") {
 
 					if (!checkVariable(temp.childNodes.get(0).value)) {
 						System.out.println("Variable " + temp.childNodes.get(0).value + " has not been declared!");
 						System.exit(1);
 					} else {
-						
-						
-						if(temp.childNodes.get(0).childNodes.size() != 0) {
-							
-							String error =typeCheck(temp.childNodes.get(0).childNodes.get(1), "int");
+
+						if (temp.childNodes.get(0).childNodes.size() != 0) {
+
+							String error = typeCheck(temp.childNodes.get(0).childNodes.get(1), "int");
 							if (error.equals("exit")) {
 								System.out.println("Semantic Error, array must have integer index ");
 								System.exit(1);
 							}
-							
+
 							String expected_type = getType(temp.childNodes.get(0).value);
 
-							if(typeCheck(temp.childNodes.get(1), expected_type).equals("exit")){
-								System.out.println("Semantic Error, Array element must be set to "+expected_type);
+							if (typeCheck(temp.childNodes.get(1), expected_type).equals("exit")) {
+								System.out.println("Semantic Error, Array element must be set to " + expected_type);
 								System.exit(1);
 							}
-							
-						}else {
-						String expected_type = getType(temp.childNodes.get(0).value);
 
-						if(typeCheck(temp.childNodes.get(1), expected_type).equals("exit")){
-							System.out.println("Semantic Error, variable "+temp.childNodes.get(1)+" must be set to "+expected_type);
-							System.exit(1);
-						}
+						} else {
+							String expected_type = getType(temp.childNodes.get(0).value);
+
+							if (typeCheck(temp.childNodes.get(1), expected_type).equals("exit")) {
+								System.out.println("Semantic Error, variable " + temp.childNodes.get(1)
+										+ " must be set to " + expected_type);
+								System.exit(1);
+							}
 						}
 					}
 
@@ -383,8 +425,6 @@ public class Semantic_Visitor {
 					for (int j = 0; j < function_headers.get(temp.value).size(); j++) {
 						match = true;
 						// check number of arguments first
-
-					
 
 						if (function_headers.get(temp.value).get(j).size() != temp.childNodes.size()) {
 							match = false;
@@ -473,9 +513,7 @@ public class Semantic_Visitor {
 	}
 
 	public String getType(String variable_identifier) {
-		
-		
-		
+
 		for (int i = 0; i < symbol_table.size(); i++) {
 
 			if (symbol_table.get(i).containsKey(variable_identifier)) {
@@ -493,8 +531,6 @@ public class Semantic_Visitor {
 
 			String variable_type = getType(variable_identifier);
 
-			
-			
 			if (!expected_return.equals(variable_type)) {
 				System.out.println("Semamtic Error, identifier expects " + expected_return + " return, instead got "
 						+ variable_type + " from " + variable_identifier);
@@ -520,9 +556,7 @@ public class Semantic_Visitor {
 		}
 
 		if (node.node_type == "Variable_Identifier") {
-			
-			
-			
+
 			return evaluateVariable(node.value, expected_type);
 
 		} else if (node.node_type == "FunctionCall") {
@@ -580,13 +614,12 @@ public class Semantic_Visitor {
 					System.out.println("Expected " + expected_type + " value, instead of bool literal");
 					return "exit";
 				}
-				
+
 			case "Char_Value":
 				if (expected_type.equals("char")) {
 					return "char";
 				} else {
-					
-					
+
 					System.out.println("Expected " + expected_type + " value, instead of char literal");
 					return "exit";
 				}
@@ -656,7 +689,7 @@ public class Semantic_Visitor {
 				case "True_Keyword":
 				case "False_Keyword":
 					return "bool";
-					
+
 				case "Char_Value":
 					return "char";
 				}
@@ -664,16 +697,13 @@ public class Semantic_Visitor {
 			}
 
 		} else if (node.childNodes.size() == 2) {
-			
-			
-			
-			if(node.childNodes.get(0).node_type == "Array_Indexing") {
-			
+
+			if (node.childNodes.get(0).node_type == "Array_Indexing") {
+
 				return getType(node.value);
-				
+
 			}
-			
-			
+
 			String type1 = expressionOperationTraversal(node.childNodes.get(0));
 			String type2 = expressionOperationTraversal(node.childNodes.get(1));
 
