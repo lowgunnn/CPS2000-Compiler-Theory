@@ -700,10 +700,17 @@ public class Interpreter_Visitor {
 			}
 
 			if (node.value.equals("-")) {
-
-				int negative = Integer.valueOf(type_value[0]) * -1;
-
+				
+				if(type_value[1] == "float") {
+				
+				double negative = Double.valueOf(type_value[0]) * -1.0;
 				return new String[] { String.valueOf(negative), type_value[1] };
+				}
+				else {
+					int neg = Integer.valueOf(type_value[0])*-1;
+					return new String[] { String.valueOf(neg), type_value[1] };
+				}
+				
 			}
 
 		}

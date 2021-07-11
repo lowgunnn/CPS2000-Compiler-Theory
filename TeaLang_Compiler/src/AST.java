@@ -111,9 +111,7 @@ public class AST {
 			
 			
 			while (root.node_type.equals("Operator")) {
-				System.out.println("ORDER OF OPERATIONSORDER OF OPERATIONSORDER OF OPERATIONSORDER OF OPERATIONSORDER OF OPERATIONSORDER OF OPERATIONSORDER OF OPERATIONSORDER OF OPERATIONS");
 				if(rel) {
-					System.out.println("RELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELRELREL");
 					if (!root.value.equals("==") && !root.value.equals("<") && !root.value.equals(">") && !root.value.equals("<=")
 							&& !root.value.equals("<=") && !root.value.equals("!=")
 							) {
