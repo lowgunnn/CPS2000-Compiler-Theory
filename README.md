@@ -63,3 +63,9 @@ more times. For example, a Block consists of zero or more Statement enclosed in 
                 | 〈Block〉<br>
 〈Block〉::= ‘{’ { 〈Statement〉} ‘}’<br>
 〈Program〉::= { 〈Statement〉}<br>
+
+<h2>Lexer</h2><br>
+The Lexer makes use of a DFSA, such as in [Formal Language and Automate Theory](https://en.wikipedia.org/wiki/Automata_theory), with a set of states, final states, defined alphabet, and valid and erroneous transitions, which are taking an input of an alphabet member, and traversing to the next state if possible.
+The lexer is implemented using a table-driven approach, in which a table, with coloumns representing the current state and rows representing the input character type, represents all the possible transitions from all the possible states using all the possible characters.
+
+For example, if the process is currently in State 1, and it receives a number as the next character input, the we locate the value located at coloumn "State 1" and row "digit", to identify the next State within our DFA. The character types would be the language's alphabet, of which different tokens can be constructed with. The tokens themselves are defined by crafting out the different transitions from different states using different character types and cross-checking with our implemented table to see the resultant state, and its final configuration determines the type of token acquired, or if it is still expecting more elements to finish said token.
